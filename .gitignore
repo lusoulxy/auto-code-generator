@@ -27,3 +27,14 @@ HELP.md
 
 ### VS Code ###
 .vscode/
+
+
+/code/auto-code-generator/target/
+/code/auto-code-generator/src/main/java/temp/
+
+/code/auto-code-generator/.classpath
+/code/auto-code-generator/.project
+/code/auto-code-generator/.settings
+/code/auto-code-generator/.springBeans
+/code/auto-code-generator/var/
+
