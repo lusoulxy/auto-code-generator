@@ -1,7 +1,5 @@
 package com.silas.generator;
 
-import org.junit.Test;
-
 /**
  * Hello world!
  *
