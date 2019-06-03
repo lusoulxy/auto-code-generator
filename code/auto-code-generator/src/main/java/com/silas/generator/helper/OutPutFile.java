@@ -1,4 +1,4 @@
-package com.silas.generator;
+package com.silas.generator.helper;
 
 import java.io.File;
 

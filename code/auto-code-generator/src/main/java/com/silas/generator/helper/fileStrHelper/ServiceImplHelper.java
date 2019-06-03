@@ -1,8 +1,9 @@
-package com.silas.generator.helper;
+package com.silas.generator.helper.fileStrHelper;
 
-import com.silas.generator.Config;
-import com.silas.generator.GeneratorUtil;
-import com.silas.generator.OutPutFile;
+import com.silas.generator.helper.OutPutFile;
+import com.silas.generator.helper.interface_.Config;
+import com.silas.generator.helper.interface_.CreateFileHelper;
+import com.silas.util.GeneratorUtil;
 import com.silas.util.StringUtils;
 
 public class ServiceImplHelper implements CreateFileHelper{
@@ -23,7 +24,9 @@ public class ServiceImplHelper implements CreateFileHelper{
 				"import org.springframework.beans.factory.annotation.Autowired;\r\n" + 
 				"import org.springframework.stereotype.Service;\r\n" + 
 				"import "+packagePath+".entity."+entityName+";\r\n" + 
-				"import "+packagePath+".mapper."+entityName+"Mapper;" + n2;
+				"import "+packagePath+".mapper."+entityName+"Mapper;" +primary_col.getColumnTypeHelper().getImportStr()+n;
+		
+		
 		// 类开始
 		String classStart = n+"@Service"+
 				n + "public class " + entityName + "ServiceImpl implements " + entityName + "Service {" + n;
@@ -45,14 +48,14 @@ public class ServiceImplHelper implements CreateFileHelper{
 				"\r\n" + 
 				"	// 根据主键删除\r\n" + 
 				"	@Override\r\n" + 
-				"	public int delect(String id) {\r\n" + 
-				"		return "+StringUtils.getLowerCamelCase(entityName)+"Mapper.deleteByPrimaryKey(id);\r\n" + 
+				"	public int delect("+primary_col.getJavaType()+" "+primary_col.getEntityField()+") {\r\n" + 
+				"		return "+StringUtils.getLowerCamelCase(entityName)+"Mapper.deleteByPrimaryKey("+primary_col.getEntityField()+");\r\n" + 
 				"	}\r\n" + 
 				"\r\n" + 
 				"	// 根据主键查询\r\n" + 
 				"	@Override\r\n" + 
-				"	public "+entityName+" findById(String id) {\r\n" + 
-				"		return "+StringUtils.getLowerCamelCase(entityName)+"Mapper.selectByPrimaryKey(id);\r\n" + 
+				"	public "+entityName+" findById("+primary_col.getJavaType()+" "+primary_col.getEntityField()+") {\r\n" + 
+				"		return "+StringUtils.getLowerCamelCase(entityName)+"Mapper.selectByPrimaryKey("+primary_col.getEntityField()+");\r\n" + 
 				"	}\r\n" + 
 				"\r\n" + 
 				"	// 根据map查询list，用于分页查询\r\n" + 

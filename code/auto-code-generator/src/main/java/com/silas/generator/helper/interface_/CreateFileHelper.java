@@ -1,12 +1,12 @@
-package com.silas.generator.helper;
+package com.silas.generator.helper.interface_;
 
 import java.util.List;
 
-import com.silas.generator.Column;
-import com.silas.generator.Config;
-import com.silas.generator.OutPutFile;
+import com.silas.generator.helper.Column;
+import com.silas.generator.helper.OutPutFile;
 
 public interface CreateFileHelper {
+	String recordName = "record";
 	String tableName = Config.tableName;//数据库表名
 	String entityName = Config.entityName;//对应实体类名
 	String entityLowerName = Config.entityLowerName;//实体类名的小驼峰命名

@@ -1,25 +1,28 @@
-package com.silas.generator.helper;
+package com.silas.generator.helper.fileStrHelper;
 
-import com.silas.generator.Column;
-import com.silas.generator.GeneratorUtil;
-import com.silas.generator.OutPutFile;
+import com.silas.generator.helper.Column;
+import com.silas.generator.helper.OutPutFile;
+import com.silas.generator.helper.interface_.CreateFileHelper;
+import com.silas.util.GeneratorUtil;
 
-public class RecordListHtmlHepler implements CreateFileHelper{
-
+public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
+	
+	int listLimit = 0;
+	{
+		if(colsLimit>colList.size())
+			this.listLimit=colList.size();
+		else if(colsLimit!=0){
+			listLimit=colsLimit;
+		}
+	}
+	
 	public void createFile() {
 		GeneratorUtil.createFile(getOutPutFile());
 	}
 
 	public OutPutFile getOutPutFile() {
 		String fileOutputStr = "";
-		String fileFullName = path + "/templates" +module+"/"+ entityName.toLowerCase() + "/add.html";
-		
-		//文件头
-		String htmlStart = "<!DOCTYPE html>\r\n" + 
-				"<html xmlns=\"http://www.w3.org/1999/xhtml\"\r\n" + 
-				"	xmlns:th=\"http://www.thymeleaf.org\"\r\n" + 
-				"	xmlns:sec=\"http://www.thymeleaf.org/thymeleaf-extras-springsecurity3\">\r\n" + 
-				"<head>";
+		String fileFullName = path + "/templates/" +module+"/"+ entityName.toLowerCase() + "/list.html";
 		//HTML<head>
 		String htmlHead = htmlHead();
 		//body之前的script
@@ -44,7 +47,7 @@ public class RecordListHtmlHepler implements CreateFileHelper{
 				"		<ul class=\"breadcrumb top-breadcrumb\">\r\n" + 
 				"			<li><i class=\"fa fa-home\"></i></li>\r\n" + 
 				"			<li>"+moduleName+"</li>\r\n" + 
-				"			<li><a href=\"/Coding/list\">"+moduleName+"列表</a></li>\r\n" + 
+				"			<li><a href=\"/"+entityName+"/list\">"+moduleName+"列表</a></li>\r\n" + 
 				"		</ul>\r\n" + 
 				"		<ul class=\"top-toolbar\"></ul>\r\n" + 
 				"	</div>";
@@ -65,7 +68,7 @@ public class RecordListHtmlHepler implements CreateFileHelper{
 		//div-pagination
 		String pagination= pagination();
 		mainDiv+=n+searchBar+toolBar+table+pagination+tab+"</div>";
-		str+=topBar+"</body>";
+		str+=topBar+mainDiv+"</body>";
 		return str;
 	}
 	//
@@ -86,16 +89,29 @@ public class RecordListHtmlHepler implements CreateFileHelper{
 	//
 	public String tableHead() {
 		String str = n+
-				"<thead>\r\n" + 
+				"			<thead>\r\n" + 
 				"				<tr align=\"center\">\r\n" + 
 				"					<th width=\"100px\">序号</th>\r\n" ;
 		String ths="";
-		for(Column column:colList) {
-			String colName = column.getColumName().toLowerCase();
-			String colZHName = colName;//列中文名，待完善 TODO
-			ths += n+"<th>"+colZHName+"</th>";
+		for(int i=0;i<listLimit;i++) {
+			String colZHName = colList.get(i).getRemark();//列中文名，待完善 TODO
+			ths += n+"					<th>"+colZHName+"</th>";
 		}
+		
+		//限制的以注释形式生成
+		ths +=n+"					<!-- "+n;
+		for(int i=listLimit;i<colList.size();i++) {
+			String colZHName = colList.get(i).getRemark();//列中文名，待完善 TODO
+			ths += n+"					<th>"+colZHName+"</th>";
+		}
+		ths +=n+"					 -->"+n;
+		
+//		for(Column column:colList) {
+//			String colZHName = column.getRemark();//列中文名，待完善 TODO
+//			ths += n+"					<th>"+colZHName+"</th>";
+//		}
 		str += n+ths+
+				"					<th style=\"width:100px\">操作</th>\r\n"+
 				"				</tr>\r\n" + 
 				"			</thead>";
 		return str;
@@ -125,18 +141,35 @@ public class RecordListHtmlHepler implements CreateFileHelper{
 	//
 	public String tableBody() {
 		String str =n+
-				"<tbody>\r\n" + 
-				"				<tr align=\"center\" th:each=\"record,recordstart : ${recordList}\">\r\n";
+				"			<tbody>\r\n" + 
+				"				<tr align=\"center\" th:each=\""+recordName+","+recordName+"start : ${"+recordName+"List}\">\r\n";
 		String tds =
-				"					<td th:text=\"${recordstart.count} + (${pageNum} -1)*${size} \"></td>\r\n";
-		for(Column column : colList) {
-			String colName = column.getColumName().toLowerCase();
-			tds +="					<td th:title=\"${record."+colName+"}\" th:text=\"${record."+colName+"}\"></td>\r\n" ;
+				"					<td th:text=\"${"+recordName+"start.count} + (${pageNum} -1)*${size} \"></td>\r\n";
+		for(int i=0;i<listLimit;i++) {
+			Column column = colList.get(i);
+			String colName = column.getEntityField();
+			tds +="					<!-- "+column.getRemark()+" -->"+n;
+			tds +="					<td th:title=\"${"+recordName+"."+colName+"}\" th:text=\"${"+recordName+"."+colName+"}\"></td>\r\n" ;
 		}
+		
+		//限制的列以注释形式生成
+		tds +="					<!-- "+n;
+		for(int i=listLimit;i<colList.size();i++) {
+			Column column = colList.get(i);
+			String colName = column.getEntityField();
+			tds +="					"+column.getRemark()+n;
+			tds +="					<td th:title=\"${"+recordName+"."+colName+"}\" th:text=\"${"+recordName+"."+colName+"}\"></td>\r\n" ;
+		}
+		tds +="					 -->"+n;
+//		for(Column column : colList) {
+//			String colName = column.getEntityField();
+//			tds +="					<!-- "+column.getRemark()+" -->";
+//			tds +="					<td th:title=\"${"+recordName+"."+colName+"}\" th:text=\"${"+recordName+"."+colName+"}\"></td>\r\n" ;
+//		}
 		tds +=n+
-				"					<td><a th:href=\"@{'/Coding/updateview/' + ${coding.id}}\"><i\r\n" + 
+				"					<td><a th:href=\"@{'/"+entityName+"/updateview/' + ${"+recordName+"."+primary_col.getEntityField()+"}}\"><i\r\n" + 
 				"							class=\"fa fa-edit fa-button\"></i></a> <a href=\"javascript:void(0)\"\r\n" + 
-				"						th:onclick=\"deleteitems([[${record.id}]]);\"><i\r\n" + 
+				"						th:onclick=\"deleteitems([[${"+recordName+"."+primary_col.getEntityField()+"}]]);\"><i\r\n" + 
 				"							class=\"fa fa-trash-alt fa-button\"></i></a></td>\r\n" ;
 		str+=tds+
 				"				</tr>\r\n" + 
@@ -148,7 +181,7 @@ public class RecordListHtmlHepler implements CreateFileHelper{
 	public String searchBar() {
 		String str =n+
 				"		<div class=\"toolbar-wrap\">\r\n" + 
-				"			<form id=\"search_form\" class=\"navbar-form navbar-right\" role=\"search\"\r\n" + 
+				"			<form id=\"search_form\" role=\"search\"\r\n" + 
 				"				method=\"get\">\r\n" + 
 				"				<div class=\"search-box\">\r\n" + 
 				"					<div class=\"row search-input\">\r\n" ;
@@ -156,21 +189,21 @@ public class RecordListHtmlHepler implements CreateFileHelper{
 	
 		if(colList!=null&&colList.size()>0) {
 			int num;
-			if(colList.size()>3) {//只自动生成三个搜索输入框
-				num=3;
+			if(colList.size()>4) {//只自动生成三个搜索输入框
+				num=4;
 			}else {
 				num = colList.size();
 			}
 			for(int i=0;i<num;i++){
 				Column column = colList.get(i);
-				String colName = column.getColumName().toLowerCase();
-				String colZHName = colName;//列中文名，待完善 TODO
+				if(column.isPkAuto())
+					continue;//主键id自动生成，不进行操作
+				String colName = column.getEntityField();
+				String colZHName = column.getRemark();//列中文名，待完善 TODO
 				search_input += n+
 						"						<div class=\"col-xs-3\">\r\n" + 
-						"							<div class=\"input-group\">\r\n" + 
 						"								<input type=\"text\" class=\"form-control \" id=\""+colName+"\" name=\""+colName+"\"\r\n" + 
 						"									th:value=\"${searchMap['"+colName+"']}\" placeholder=\"请输入"+colZHName+"\">\r\n" + 
-						"							</div>\r\n" + 
 						"						</div>";
 			}
 			//搜索按钮
@@ -290,7 +323,7 @@ public class RecordListHtmlHepler implements CreateFileHelper{
 				"	function deleteitems(id){\r\n" + 
 				"		var msg = \"您真的确定要删除吗？\\n\\n请确认！\";\r\n" + 
 				"		if (confirm(msg)==true){\r\n" + 
-				"			window.location.href=\"/Coding/delect/\"+id;\r\n" + 
+				"			window.location.href=\"/"+entityName+"/delect/\"+id;\r\n" + 
 				"		}else{\r\n" + 
 				"			return false;\r\n" + 
 				"		}\r\n" + 
@@ -304,7 +337,7 @@ public class RecordListHtmlHepler implements CreateFileHelper{
 				"<head>\r\n" + 
 				"<meta charset=\"utf-8\" />\r\n" + 
 				"<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n" + 
-				"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\r\n" + 
+				"<meta name=\"list\" content=\"width=device-width, initial-scale=1\" />\r\n" + 
 				"<script th:src=\"@{/Content/assets/lib/jquery-2.1.1.min.js}\"></script>\r\n" + 
 				"<script th:src=\"@{/Content/assets/lib/aYin/aYin.js}\"></script>\r\n" + 
 				"<script th:src=\"@{/Content/assets/lib/bootstrap/js/bootstrap.min.js}\"></script>\r\n" + 

@@ -1,11 +1,15 @@
-package com.silas.generator;
+package com.silas.util;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
-import com.silas.generator.helper.EntityHepler;
+import com.silas.generator.helper.Column;
+import com.silas.generator.helper.ColumnTypeHelper;
+import com.silas.generator.helper.OutPutFile;
+import com.silas.generator.helper.fileStrHelper.EntityHepler;
+import com.silas.generator.helper.interface_.Config;
 
 public class GeneratorUtil {
 
@@ -102,6 +106,10 @@ public class GeneratorUtil {
 			return "java.util.Date";
 		}
 		return null;
+	}
+
+	public static ColumnTypeHelper getColumnHelper(String columType) {
+		return Config.JDBC_JAVA_MAP.get(columType);
 	}
 
 }

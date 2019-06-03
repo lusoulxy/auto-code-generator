@@ -5,6 +5,7 @@ public class DBConifguration {
 	private String url;//数据连接URL
 	private String username ;//用户名
 	private String password;//密码
+	public static boolean IS_ORACEL=false;//是否为oracle数据库,默认为否
 	
 	public String getDriverClassName() {
 		return driverClassName;

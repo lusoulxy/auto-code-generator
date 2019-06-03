@@ -2,28 +2,27 @@ package com.silas.generator;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.silas.generator.helper.ControllerHelper;
-import com.silas.generator.helper.EntityHepler;
-import com.silas.generator.helper.MapperJavaHelper;
-import com.silas.generator.helper.MapperXMLHelper;
-import com.silas.generator.helper.RecordListHtmlHepler;
-import com.silas.generator.helper.ServiceHelper;
-import com.silas.generator.helper.ServiceImplHelper;
+import com.silas.generator.helper.Column;
+import com.silas.generator.helper.fileStrHelper.ControllerHelper;
+import com.silas.generator.helper.fileStrHelper.EntityHepler;
+import com.silas.generator.helper.fileStrHelper.MapperJavaHelper;
+import com.silas.generator.helper.fileStrHelper.MapperXMLHelper;
+import com.silas.generator.helper.fileStrHelper.RecordAddHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.RecordListHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.RecordViewHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.ServiceHelper;
+import com.silas.generator.helper.fileStrHelper.ServiceImplHelper;
+import com.silas.generator.helper.interface_.Config;
+import com.silas.jdbc.DBConifguration;
 import com.silas.jdbc.DBHelper;
 import com.silas.util.ResultBody;
 
 public class Generator extends Config {
-	public static void main(String[] args) {
-		new Generator().generateCode();
-	}
 
 	// 自动生成代码
 	public ResultBody generateCode() {
@@ -60,26 +59,38 @@ public class Generator extends Config {
 			dBMetaData = connection.getMetaData();
 			// 根据表名获得主键结果集
 			resultSet = dBMetaData.getPrimaryKeys(null, null, tableName);
-			// 根据结果集元数据打印内容
+			// 根据主键结果集设置表主键
 			while (resultSet.next()) {
 				primary_col.setColumName(resultSet.getString("COLUMN_NAME"));
 			}
 			//释放资源
 			DBHelper.release(resultSet);
-			// 数据库表元数据
+			// 数据库表字段元数据
 			resultSet = dBMetaData.getColumns(null, "%", tableName, "%");
 			Column column = null;
+			ResultSetMetaData setMeta = resultSet.getMetaData();
+//			for(int i=1;i<setMeta.getColumnCount();i++) {
+//				System.out.println(setMeta.getColumnName(i));
+//			}
 			while (resultSet.next()) {
 				column = new Column();
-				column.setColumName(resultSet.getString("COLUMN_NAME"));// 字段名
-				column.setColumType(resultSet.getString("TYPE_NAME"));// 字段类型
-				//根据TYPE_NAME，设置JavaType
-				column.setJavaType(GeneratorUtil.getJavaType(column.getColumType()));
-				//根据TYPE_NAME，设置jdbcType
-				column.setJdbcType(GeneratorUtil.getJdbcType(column.getColumType()));
+//				column.setTableName(resultSet.getString("TABLE_NAME"));//表名
+				String columnName = resultSet.getString("COLUMN_NAME");
+				column.setColumName(columnName);// 字段名
+				String typeName = resultSet.getString("TYPE_NAME");// 字段类型
+				column.setColumType(typeName);
+				String remark = resultSet.getString("REMARKS");
+				if(remark==null||remark.equals(""))
+					remark=columnName;
+				column.setRemark(remark);//字段注释
+				//根据TYPE_NAME，设置JavaType，设置jdbcType
+				column.setColumnHelper(Config.JDBC_JAVA_MAP.get(typeName));
 				//判断是否为主键
 				if(primary_col.getColumName()!=null&&this.primary_col.getColumName().equals(column.getColumName())) {
 					column.setPk(true);
+					if(typeName.equals("VARCHAR2")&&DBConifguration.IS_ORACEL) {
+						column.setPkAuto(true);//主键自动生成
+					}
 					primary_col =column;
 				}
 				list.add(column);
@@ -106,10 +117,12 @@ public class Generator extends Config {
 		new ServiceImplHelper().createFile();
 		// 6.生成controller/EntityNameController文件
 		new ControllerHelper().createFile();
-		// 7.生成template/entityName/add.html
+		// 7.生成template/entityName/list.html
 		new RecordListHtmlHepler().createFile();
 		// 8.生成template/entityName/updateview.html
-		// 9.生成template/entityName/list.html
+		new RecordViewHtmlHepler().createFile();
+		// 9.生成template/entityName/add.html
+		new RecordAddHtmlHepler().createFile();
 
 	}
 	

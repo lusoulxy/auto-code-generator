@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 public class DBHelper {
 	
@@ -18,7 +19,12 @@ public class DBHelper {
 		Connection connection = null;
 		try {
 			Class.forName(driverClassName).newInstance();
-			connection = DriverManager.getConnection(url, username, password);
+//			connection = DriverManager.getConnection(url, username, password);
+			Properties props =new Properties();
+			props.put("user", username);
+			props.put("password", password);
+			props.put("remarksReporting","true");
+			connection = DriverManager.getConnection(url,props);
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (connection != null) {

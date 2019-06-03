@@ -4,6 +4,32 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtils {
+	/**
+	 * 首字母转小写
+	 * @param s
+	 * @return
+	 */
+	public static String toLoweraseFirstOne(String s) {
+		if(s==null)
+			return null;
+		if (Character.isUpperCase(s.charAt(0)))
+			return s;
+		else
+			return (new StringBuilder()).append(Character.toLowerCase(s.charAt(0))).append(s.substring(1)).toString();
+	}
+	/**
+	 * 首字母转大写
+	 * @param s
+	 * @return
+	 */
+	public static String toUpperCaseFirstOne(String s) {
+		if(s==null)
+			return null;
+		if (Character.isUpperCase(s.charAt(0)))
+			return s;
+		else
+			return (new StringBuilder()).append(Character.toUpperCase(s.charAt(0))).append(s.substring(1)).toString();
+	}
 
 	/**
 	 * 下划线转驼峰法(默认小驼峰)

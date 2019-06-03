@@ -1,7 +1,8 @@
-package com.silas.generator.helper;
+package com.silas.generator.helper.fileStrHelper;
 
-import com.silas.generator.GeneratorUtil;
-import com.silas.generator.OutPutFile;
+import com.silas.generator.helper.OutPutFile;
+import com.silas.generator.helper.interface_.CreateFileHelper;
+import com.silas.util.GeneratorUtil;
 import com.silas.util.StringUtils;
 
 public class ServiceHelper implements CreateFileHelper{
@@ -19,7 +20,7 @@ public class ServiceHelper implements CreateFileHelper{
 		// import导入类
 		String importStr = "import java.util.List;\r\n" + "import java.util.Map;\r\n"
 				+ "import " + packagePath + ".entity." + entityName
-				+ ";" + n2;
+				+ ";" +primary_col.getColumnTypeHelper().getImportStr()+ n;
 		// 类开始
 		String classStart = n + "public interface " + entityName + "Service {" + n;
 
@@ -30,10 +31,10 @@ public class ServiceHelper implements CreateFileHelper{
 				"	public int update("+entityName+" "+StringUtils.getLowerCamelCase(entityName)+");\r\n" + 
 				"\r\n" + 
 				"	//根据主键删除\r\n" + 
-				"	public int delect(String id);\r\n" + 
+				"	public int delect("+primary_col.getJavaType()+" "+primary_col.getEntityField()+");\r\n" + 
 				"\r\n" + 
 				"	//根据主键查询\r\n" + 
-				"	public "+entityName+" findById(String id);\r\n" + 
+				"	public "+entityName+" findById("+primary_col.getJavaType()+" "+primary_col.getEntityField()+");\r\n" + 
 				"\r\n" + 
 				"	//根据map查询list，用于分页查询\r\n" + 
 				"	public List<"+entityName+"> getListByMap(Map<String, Object> map);\r\n" + 

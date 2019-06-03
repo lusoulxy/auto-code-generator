@@ -1,11 +1,12 @@
-package com.silas.generator.helper;
+package com.silas.generator.helper.fileStrHelper;
 
 import java.util.List;
 
-import com.silas.generator.Column;
-import com.silas.generator.Config;
-import com.silas.generator.GeneratorUtil;
-import com.silas.generator.OutPutFile;
+import com.silas.generator.helper.Column;
+import com.silas.generator.helper.OutPutFile;
+import com.silas.generator.helper.interface_.Config;
+import com.silas.generator.helper.interface_.CreateFileHelper;
+import com.silas.util.GeneratorUtil;
 
 public class MapperXMLHelper implements CreateFileHelper{
 
@@ -29,7 +30,7 @@ public class MapperXMLHelper implements CreateFileHelper{
 		// 文件头
 		String fileStar = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 				+ "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\r\n"
-				+ "<mapper namespace=\""+packagePath+".mapper."+entityName+"Mapper\">" + n;
+				+ "<mapper namespace=\""+packagePath+".mapper."+entityName+"Mapper\">";
 		// BaseResultMap
 		String resultMap = resultMap(colList);
 
@@ -88,8 +89,8 @@ public class MapperXMLHelper implements CreateFileHelper{
 				"		<trim prefix=\"where\" suffixOverrides=\"AND\">\r\n";
 		String whereStr = "";
 		for(Column col:colList) {
-			whereStr += tab3+"<if test=\""+col.getLowerCamelCaseName()+"!=null\">\r\n" + 
-					tab4+col.getColumName()+" = #{"+col.getLowerCamelCaseName()+"} AND\r\n" + 
+			whereStr += tab3+"<if test=\""+col.getEntityField()+"!=null\">\r\n" + 
+					tab4+col.getColumName()+" = #{"+col.getEntityField()+"} AND\r\n" + 
 					tab3+"</if>"+n;
 		}
 		whereStr += tab2+"</trim>\r\n";
@@ -105,8 +106,8 @@ public class MapperXMLHelper implements CreateFileHelper{
 				"		<trim prefix=\"where\" suffixOverrides=\"AND\">\r\n";
 		String whereStr = "";
 		for(Column col:colList) {
-			whereStr += tab3+"<if test=\""+col.getLowerCamelCaseName()+"!=null\">\r\n" + 
-					tab4+col.getColumName()+" = #{"+col.getLowerCamelCaseName()+"} AND\r\n" + 
+			whereStr += tab3+"<if test=\""+col.getEntityField()+"!=null\">\r\n" + 
+					tab4+col.getColumName()+" = #{"+col.getEntityField()+"} AND\r\n" + 
 					tab3+"</if>"+n;
 		}
 		whereStr += tab2+"</trim>\r\n";
@@ -126,8 +127,8 @@ public class MapperXMLHelper implements CreateFileHelper{
 		
 		String whereStr = "";
 		for(Column col:colList) {
-			whereStr += tab3+"<if test=\""+col.getLowerCamelCaseName()+"!=null\">\r\n" + 
-					tab4+col.getColumName()+" = #{"+col.getLowerCamelCaseName()+"} AND\r\n" + 
+			whereStr += tab3+"<if test=\""+col.getEntityField()+"!=null\">\r\n" + 
+					tab4+col.getColumName()+" = #{"+col.getEntityField()+"} AND\r\n" + 
 					tab3+"</if>"+n;
 		}
 		whereStr += tab2+"</trim>\r\n";
@@ -150,12 +151,12 @@ public class MapperXMLHelper implements CreateFileHelper{
 				+ tab2+"set ";
 		String setStr = "";
 		for(Column col:colList) {
-			setStr +=col.getColumName()+" = #{"+col.getLowerCamelCaseName()+",jdbcType="+col.getJdbcType()+"},\r\n"+tab2;
+			setStr +=col.getColumName()+" = #{"+col.getEntityField()+",jdbcType="+col.getJdbcType()+"},\r\n"+tab2;
 		}
 		//去掉最后一个逗号
 		setStr = setStr.substring(0,setStr.lastIndexOf(","));
 		updateByPrimaryKey += setStr +n
-				+"		where ID = #{id,jdbcType=VARCHAR}\r\n" + "	</update>";
+				+"		where "+primary_col.getColumName()+" = #{"+primary_col.getEntityField()+",jdbcType="+primary_col.getJdbcType()+"}\r\n" + "	</update>";
 		return updateByPrimaryKey;
 	}
 
@@ -166,26 +167,26 @@ public class MapperXMLHelper implements CreateFileHelper{
 				+ "\">\r\n" + tab2 + "update U_END_PRICE\r\n" + tab2 + "<set>\r\n";
 		String setSelective = "";
 		for (Column col : colList) {
-			setSelective +=tab3+"<if test=\""+col.getLowerCamelCaseName()+" != null\">\r\n" + 
-					tab4+col.getColumName()+"=#{"+col.getLowerCamelCaseName()+",jdbcType="+col.getJdbcType()+"},\r\n" + 
+			setSelective +=tab3+"<if test=\""+col.getEntityField()+" != null\">\r\n" + 
+					tab4+col.getColumName()+"=#{"+col.getEntityField()+",jdbcType="+col.getJdbcType()+"},\r\n" + 
 					tab3+"</if>"+n;
 		}
 		updateByPrimaryKeySelective+=setSelective
+				+"		</set>\r\n"
 				+ tab2+"where "+primary_col.getColumName()
-				+" = #{"+primary_col.getLowerCamelCaseName()
+				+" = #{"+primary_col.getEntityField()
 				+",jdbcType="+primary_col.getJdbcType()+"}\r\n" 
-				+"</set>\r\n"
 				+ "	</update>";
 		return updateByPrimaryKeySelective;
 	}
 	
 	// 根据主键查询字段 selectByPrimaryKey
 	static String selectByPrimaryKey(List<Column> colList) {
-		String selectByPrimaryKey = n + "<!-- 插入记录，选择字段插入 -->" + n
+		String selectByPrimaryKey = n + "<!-- 根据主键查询字段 -->" + n
 				+ "	<select id=\"selectByPrimaryKey\" parameterType=\"" + primary_col.getJavaType() + "\"\r\n"
 				+ "		resultMap=\"BaseResultMap\">\r\n" + "		select\r\n"
 				+ "		<include refid=\"Base_Column_List\" />\r\n" + "		from " + tableName + "\r\n" + "		where "
-				+ primary_col.getColumName() + " = #{id,jdbcType=VARCHAR}\r\n" + "	</select>";
+				+ primary_col.getColumName() + " = #{"+primary_col.getEntityField()+",jdbcType="+primary_col.getJdbcType()+"}\r\n" + "	</select>";
 		return selectByPrimaryKey;
 	}
 
@@ -196,17 +197,17 @@ public class MapperXMLHelper implements CreateFileHelper{
 				+ "		insert into " + tableName + "\r\n";
 		// 赋值字段拼接
 		String columnStr = tab2 + "<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">\r\n";
-		String valuesStr = tab2 + "<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">\r\n";
+		String valuesStr = tab2 + "<trim prefix=\"values (\" suffix=\")\" suffixOverrides=\",\">\r\n";
 		for (Column col : colList) {
-			if (col.isPk()) {// 若为主键
+			if (col.isPkAuto()) {// 若为主键
 				columnStr += tab3 + col.getColumName() + "," + n;
 				valuesStr += tab3 + "sys_guid()," + n;// 使用GUID,此为ORACLE数据库
 
 			} else {
-				columnStr += tab3 + "<if test=\"" + col.getLowerCamelCaseName() + " != null\">\r\n" + tab4 + ""
+				columnStr += tab3 + "<if test=\"" + col.getEntityField() + " != null\">\r\n" + tab4 + ""
 						+ col.getColumName() + ",\r\n" + tab3 + "</if>" + n;
-				valuesStr += tab3 + "<if test=\"" + col.getLowerCamelCaseName() + " != null\">\r\n" + tab4 + "#{"
-						+ col.getColumName() + ",jdbcType=" + col.getJdbcType() + "},\r\n" + tab3 + "</if>" + n;
+				valuesStr += tab3 + "<if test=\"" + col.getEntityField() + " != null\">\r\n" + tab4 + "#{"
+						+ col.getEntityField() + ",jdbcType=" + col.getJdbcType() + "},\r\n" + tab3 + "</if>" + n;
 			}
 		}
 		columnStr += tab2 + "</trim>" + n;
@@ -224,10 +225,10 @@ public class MapperXMLHelper implements CreateFileHelper{
 		String valuesStr = tab2 + "(";
 		for (Column col : colList) {
 			baseColumnList += col.getColumName() + ", ";
-			if (col.isPk()) {
+			if (col.isPkAuto()) {
 				valuesStr += "sys_guid(), ";
 			} else {
-				valuesStr += "#{" + col.getColumName() + ",jdbcType=" + col.getJdbcType() + "}, ";
+				valuesStr += "#{" + col.getEntityField() + ",jdbcType=" + col.getJdbcType() + "}, ";
 			}
 		}
 		// 去掉多余的逗号
@@ -260,12 +261,12 @@ public class MapperXMLHelper implements CreateFileHelper{
 				+ ".entity." + entityName + "\">\r\n";
 		if (primary_col != null) {
 			resultMap += "		<id column=\"" + primary_col.getColumName() + "\" jdbcType=\""
-					+ primary_col.getJdbcType() + "\" property=\"id\" />\r\n";
+					+ primary_col.getJdbcType() + "\" property=\""+primary_col.getEntityField()+"\" />\r\n";
 		}
 		for (Column col : colList) {
 			if (!col.isPk()) {
 				resultMap += "		<result column=\"" + col.getColumName() + "\" jdbcType=\"" + col.getJdbcType()
-						+ "\" property=\"" + col.getLowerCamelCaseName() + "\" />\r\n";
+						+ "\" property=\"" + col.getEntityField() + "\" />\r\n";
 			}
 		}
 		resultMap += "	</resultMap>" + n;

@@ -1,11 +1,12 @@
-package com.silas.generator.helper;
+package com.silas.generator.helper.fileStrHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.silas.generator.Config;
-import com.silas.generator.GeneratorUtil;
-import com.silas.generator.OutPutFile;
+import com.silas.generator.helper.OutPutFile;
+import com.silas.generator.helper.interface_.Config;
+import com.silas.generator.helper.interface_.CreateFileHelper;
+import com.silas.util.GeneratorUtil;
 
 public class ControllerHelper implements CreateFileHelper{
 	
@@ -81,7 +82,8 @@ public class ControllerHelper implements CreateFileHelper{
 				"import com.hzsh.configuration.entity.SystemLog;\r\n" + 
 				"import com.hzsh.configuration.service.SystemLogService;\r\n" + 
 				"import "+packagePath+".entity."+entityName+";\r\n" + 
-				"import "+packagePath+".service."+entityName+"Service;";
+				"import "+packagePath+".service."+entityName+"Service;"+
+				primary_col.getColumnTypeHelper().getImportStr();
 		return str;
 	}
 	
@@ -136,7 +138,7 @@ public class ControllerHelper implements CreateFileHelper{
 				"		systemLog.setEndtime(new Date());\r\n" + 
 				"		systemLog.setRemark(message1);\r\n" + 
 				"		systemLogService.save(systemLog);// 保持日志\r\n" + 
-				"		return \"redirect:/"+entityLowerName+"/searchList?message=\" + message;\r\n" + 
+				"		return \"redirect:/"+entityName+"/list?message=\" + message;\r\n" + 
 				"	}";
 		return str;
 	}
@@ -150,12 +152,12 @@ public class ControllerHelper implements CreateFileHelper{
 				"	 * @return\r\n" + 
 				"	 * @throws Exception\r\n" + 
 				"	 */\r\n" + 
-				"	@GetMapping(\"/updateview/{id}\")\r\n" + 
-				"	public String updateview(@PathVariable(name = \"id\") String id, Model model) throws Exception {\r\n" + 
+				"	@GetMapping(\"/updateview/{"+primary_col.getEntityField()+"}\")\r\n" + 
+				"	public String updateview(@PathVariable(name = \""+primary_col.getEntityField()+"\") "+primary_col.getJavaType()+" "+primary_col.getEntityField()+", Model model) throws Exception {\r\n" + 
 				"\r\n" + 
 				"		"+entityName+" "+entityLowerName+" = new "+entityName+"();\r\n" + 
 				"\r\n" + 
-				"		"+entityLowerName+" = "+entityLowerName+"Service.findById(id);\r\n" + 
+				"		"+entityLowerName+" = "+entityLowerName+"Service.findById("+primary_col.getEntityField()+");\r\n" + 
 				"\r\n" + 
 				"		model.addAttribute(\""+entityLowerName+"\", "+entityLowerName+");\r\n" + 
 				"		return \""+module+"/"+entityLowerName+"/updateview\";\r\n" + 
@@ -224,7 +226,7 @@ public class ControllerHelper implements CreateFileHelper{
 				"		}\r\n" + 
 				"		searchMap.put(\"first\", (pageNum - 1) * size + 1);//记录起始下标\r\n" + 
 				"		searchMap.put(\"last\", pageNum * size);//记录结束下标\r\n" + 
-				"		searchMap.put(\"orderStr\", \" g.id DESC\");//默认id排序\r\n" + 
+				"		searchMap.put(\"orderStr\", \" g."+primary_col.getColumName()+" DESC\");//默认id排序\r\n" + 
 				"		List<"+entityName+"> recordList = "+entityLowerName+"Service.getListByMap(searchMap);//查询list\r\n" + 
 				"		allnum = "+entityLowerName+"Service.getTotalNumByMap(searchMap);// 查询总记录数\r\n" + 
 				"		if (allnum > 0) {//如果有记录\r\n" + 
@@ -251,19 +253,19 @@ public class ControllerHelper implements CreateFileHelper{
 				"	 * @return\r\n" + 
 				"	 * @throws Exception\r\n" + 
 				"	 */\r\n" + 
-				"	@GetMapping(\"/delect/{id}\")\r\n" + 
-				"	public String delect(Model model, @PathVariable String id) throws Exception {\r\n" + 
+				"	@GetMapping(\"/delect/{"+primary_col.getEntityField()+"}\")\r\n" + 
+				"	public String delect(Model model, @PathVariable "+primary_col.getJavaType()+" "+primary_col.getEntityField()+") throws Exception {\r\n" + 
 				"		int suc = 0;\r\n" + 
 				"		String message = \"\";\r\n" + 
 				"		String message1 = \"\";\r\n" + 
 				"		try {\r\n" + 
-				"			suc = this."+entityLowerName+"Service.delect(id);\r\n" + 
+				"			suc = this."+entityLowerName+"Service.delect("+primary_col.getEntityField()+");\r\n" + 
 				"			if (suc == 1) {\r\n" + 
 				"				message = \"delectsuccess\";\r\n" + 
-				"				message1 = \"删除id:\" + id + \"成功\";\r\n" + 
+				"				message1 = \"删除"+primary_col.getEntityField()+":\" + "+primary_col.getEntityField()+" + \"成功\";\r\n" + 
 				"			} else {\r\n" + 
 				"				message = \"delectfailure\";\r\n" + 
-				"				message1 = \"删除id:\" + id + \"失败\";\r\n" + 
+				"				message1 = \"删除"+primary_col.getEntityField()+":\" + "+primary_col.getEntityField()+" + \"失败\";\r\n" + 
 				"			}\r\n" + 
 				"		} catch (Exception e) {\r\n" + 
 				"			message = e.getMessage();\r\n" + 

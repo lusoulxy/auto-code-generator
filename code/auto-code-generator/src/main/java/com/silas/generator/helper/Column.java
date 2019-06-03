@@ -1,4 +1,4 @@
-package com.silas.generator;
+package com.silas.generator.helper;
 
 import com.silas.util.StringUtils;
 
@@ -7,11 +7,41 @@ public class Column {
 	private String columName;// 字段名
 	private String columType;// 字段类型
 	private boolean isPk = false;// 是否为主键
-	private String jdbcType;
-	private String JavaType;
-	private String classNameStr;
+	private boolean isPkAuto = false;///是否自动生成主键
+	private String remark;//注释
+
+	private ColumnTypeHelper columnTypeHelper;
 	
+
+	public boolean isPkAuto() {
+		return isPkAuto;
+	}
+
+	public void setPkAuto(boolean isPkAuto) {
+		this.isPkAuto = isPkAuto;
+	}
+
+	public String getEntityField() {
+		return StringUtils.getLowerCamelCase(columName);
+	}
 	
+	public ColumnTypeHelper getColumnTypeHelper() {
+		return columnTypeHelper;
+	}
+
+	public void setColumnHelper(ColumnTypeHelper columnTypeHelper) {
+		this.columnTypeHelper = columnTypeHelper;
+	}
+
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	// 小驼峰命名法
 	public String getLowerCamelCaseName() {
 		if (columName != null)
@@ -26,27 +56,6 @@ public class Column {
 			return StringUtils.getUperCamelCase(columName);
 		else
 			return null;
-	}
-
-	
-	
-	public String getJdbcType() {
-		return jdbcType;
-	}
-
-	public void setJdbcType(String jdbcType) {
-		this.jdbcType = jdbcType;
-	}
-
-	public String getJavaType() {
-		return JavaType;
-	}
-
-	public void setJavaType(String javaType) {
-		if(javaType!=null) {
-			this.classNameStr = javaType.substring(javaType.lastIndexOf("."));
-		}
-		this.JavaType = javaType;
 	}
 
 	public boolean isPk() {
@@ -84,5 +93,15 @@ public class Column {
 	@Override
 	public String toString() {
 		return "Column [columName=" + columName + ", columType=" + columType + "]";
+	}
+
+	public String getJdbcType() {
+		// TODO Auto-generated method stub
+		return getColumnTypeHelper().getJdbcType();
+	}
+
+	public String getJavaType() {
+		// TODO Auto-generated method stub
+		return getColumnTypeHelper().getClassName();
 	}
 }
