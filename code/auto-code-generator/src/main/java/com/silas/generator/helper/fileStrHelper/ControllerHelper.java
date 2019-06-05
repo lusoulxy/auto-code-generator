@@ -68,9 +68,10 @@ public class ControllerHelper implements CreateFileHelper{
 		String exportExcel = exportExcel();//生成导出数据表数据，导出格式为excel
 		
 		//方法拼接
-		classBody += addViewMethodStr+saveMethodStr+updateViewMethodStr+
-				updateMethodStr+lisMethodStr+deleteMethodStr+exportExcel+
-				importExcelView+importExcel+downloadTemplate;
+//		classBody += addViewMethodStr+saveMethodStr+updateViewMethodStr+
+//				updateMethodStr+lisMethodStr+deleteMethodStr+exportExcel+
+//				importExcelView+importExcel+downloadTemplate;
+		classBody += lisMethodStr;
 		// 类结束
 		String classEnd = "}";
 		// import导入类

@@ -11,13 +11,13 @@ import com.silas.util.GeneratorUtil;
 
 public class Config {
 	{//设置模块参数
-//		添加 ERP物料编码 模块代码	
-		tableName = "C_ERP_CODE";//数据库表名
-		entityName = "ErpCode";//对应实体类名
-		packagePath = "com.hzsh.configuration";//包名
-		module = "configuration";//大模块名
-		parenModuleName = "配置管理";
-		moduleName = "ERP物料编码";//模块中文名，用于生成注释与日志相关
+//		添加 中间物料 模块代码	
+		tableName = "I_END_PRICE";//数据库表名
+		entityName = "IEndPrice";//对应实体类名
+		packagePath = "com.hzsh.IEndPrice";//包名
+		module = "IEndPrice";
+		parenModuleName = "中间物料";//大模块名
+		moduleName = "中间物料";//模块中文名，用于生成注释与日志相关
 	}
 	public static String tableName;//数据库表名
 	public static String entityName;//对应实体类名
@@ -31,10 +31,18 @@ public class Config {
 	//数据库配置类
 	public static DBConifguration dbConifguration =new DBConifguration();
 	{//数据库参数配置
+		//mySql
+//		String driverClassName = "com.mysql.jdbc.Driver";
+//		String url = "jdbc:mysql://120.79.172.52:3306/social_network"; // lhdw为数据库的SID
+//		String username = "root";//prices,hzshcxc
+//		String password = "root=1314@=xhh";//Prices1234,cxcHZSH1234
+		
+		//oracle
 		String driverClassName = "oracle.jdbc.OracleDriver";
 		String url = "jdbc:oracle:thin:@10.152.71.12:1521:lhdw"; // lhdw为数据库的SID
 		String username = "prices";//prices,hzshcxc
 		String password = "Prices1234";//Prices1234,cxcHZSH1234
+		
 //		 url: jdbc:sqlserver://10.152.71.192:1433;DatabaseName=Honeywell.MES
 //		driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 //		String driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";

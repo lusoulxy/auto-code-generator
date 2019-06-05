@@ -24,6 +24,13 @@ public class DBHelper {
 			props.put("user", username);
 			props.put("password", password);
 			props.put("remarksReporting","true");
+			
+			 //开启代理
+//			props.put("proxy_host", "dlhz.cnooc");
+//			props.put("proxy_port", "8080");
+//			props.put("proxy_user", "ex_huangchr");
+//			props.put("proxy_password", "P@ssword");
+//			
 			connection = DriverManager.getConnection(url,props);
 		} catch (Exception e) {
 			e.printStackTrace();
