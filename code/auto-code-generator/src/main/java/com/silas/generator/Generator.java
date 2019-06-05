@@ -13,11 +13,11 @@ import com.silas.generator.helper.fileStrHelper.EntityHepler;
 import com.silas.generator.helper.fileStrHelper.MapperJavaHelper;
 import com.silas.generator.helper.fileStrHelper.MapperXMLHelper;
 import com.silas.generator.helper.fileStrHelper.RecordAddHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.RecordImportViewHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordListHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordViewHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.ServiceHelper;
 import com.silas.generator.helper.fileStrHelper.ServiceImplHelper;
-import com.silas.generator.helper.interface_.Config;
 import com.silas.jdbc.DBConifguration;
 import com.silas.jdbc.DBHelper;
 import com.silas.util.ResultBody;
@@ -82,12 +82,14 @@ public class Generator extends Config {
 				String remark = resultSet.getString("REMARKS");
 				if(remark==null||remark.equals(""))
 					remark=columnName;
+				remark = remark.replaceAll("\n", " ");//去掉所有换行
 				column.setRemark(remark);//字段注释
 				//根据TYPE_NAME，设置JavaType，设置jdbcType
 				column.setColumnHelper(Config.JDBC_JAVA_MAP.get(typeName));
 				//判断是否为主键
 				if(primary_col.getColumName()!=null&&this.primary_col.getColumName().equals(column.getColumName())) {
 					column.setPk(true);
+					//暂时默认ORACLE的数据库主键为VARCHAR2则主键自增 ，待完善 TODO
 					if(typeName.equals("VARCHAR2")&&DBConifguration.IS_ORACEL) {
 						column.setPkAuto(true);//主键自动生成
 					}
@@ -119,11 +121,12 @@ public class Generator extends Config {
 		new ControllerHelper().createFile();
 		// 7.生成template/entityName/list.html
 		new RecordListHtmlHepler().createFile();
-		// 8.生成template/entityName/updateview.html
+		// 8.生成template/entityName/updateView.html
 		new RecordViewHtmlHepler().createFile();
 		// 9.生成template/entityName/add.html
 		new RecordAddHtmlHepler().createFile();
-
+		// 10.生成template/entityName/importView.html
+		new RecordImportViewHtmlHepler().createFile();
 	}
 	
 }

@@ -1,7 +1,10 @@
 package com.silas.generator.helper.interface_;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.silas.generator.Config;
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.OutPutFile;
 
@@ -13,11 +16,13 @@ public interface CreateFileHelper {
 	String path = Config.path;//代码文件输出路径
 	String packagePath = Config.packagePath;//包名
 	String module = Config.module;//模块名
+	String parenModuleName = Config.parenModuleName;//大模块中文名
 	String moduleName = Config.moduleName;//模块中文名，用于生成注释与日志相关
 	
 	List<Column> colList = Config.colList;//根据表名获取的列元数据 
 	Column primary_col = Config.primary_col;//根据表名获取的主键
 	
+	String dateFormatPartten="yyyy-MM-dd HH:mm:ss";
 	String tab = "\t";
 	String tab2 = "\t\t";
 	String tab3 = "\t\t\t";

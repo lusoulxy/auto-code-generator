@@ -19,8 +19,9 @@ public class ServiceHelper implements CreateFileHelper{
 		String packageStr = "package " + packagePath + ".service;" + n2;
 		// import导入类
 		String importStr = "import java.util.List;\r\n" + "import java.util.Map;\r\n"
-				+ "import " + packagePath + ".entity." + entityName
-				+ ";" +primary_col.getColumnTypeHelper().getImportStr()+ n;
+				+ "import " + packagePath + ".entity." + entityName+";"+n
+				+"import org.springframework.web.multipart.MultipartFile;"+n
+				+primary_col.getColumnTypeHelper().getImportStr()+ n;
 		// 类开始
 		String classStart = n + "public interface " + entityName + "Service {" + n;
 
@@ -43,7 +44,9 @@ public class ServiceHelper implements CreateFileHelper{
 				"	public int getTotalNumByMap(Map<String, Object> map);\r\n" + 
 				"\r\n" + 
 				"	//根据实体类查询list\r\n" + 
-				"	public List<"+entityName+"> getListByEntity("+entityName+" "+StringUtils.getLowerCamelCase(entityName)+");" + n;
+				"	public List<"+entityName+"> getListByEntity("+entityName+" "+StringUtils.getLowerCamelCase(entityName)+");" + n+
+				"//导入excel\r\n" + 
+				"	String importExcel(String fileName, MultipartFile file) throws Exception;";
 		// 类结束
 		String classEnd = "}";
 		// 拼接

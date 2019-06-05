@@ -22,7 +22,7 @@ public class Column {
 	}
 
 	public String getEntityField() {
-		return StringUtils.getLowerCamelCase(columName);
+		return StringUtils.getLowerCamelCase(columName.toLowerCase());
 	}
 	
 	public ColumnTypeHelper getColumnTypeHelper() {
@@ -103,5 +103,9 @@ public class Column {
 	public String getJavaType() {
 		// TODO Auto-generated method stub
 		return getColumnTypeHelper().getClassName();
+	}
+	
+	public String getEntityFieldUpperFisrt() {
+		return StringUtils.toUpperCaseFirstOne(StringUtils.getLowerCamelCase(columName.toLowerCase()));
 	}
 }

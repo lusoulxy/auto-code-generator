@@ -1,11 +1,28 @@
 package com.silas.generator.helper.fileStrHelper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.OutPutFile;
 import com.silas.generator.helper.interface_.CreateFileHelper;
 import com.silas.util.GeneratorUtil;
 
 public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
+	String HtmlZHName="列表";
+	String htmlName="list.html";
+	//要添加的操作方法
+	Map<String,String> operationMap = new HashMap<String,String>();
+	{
+		//add 新增
+		operationMap.put("add", "新增");
+		//importExcelView 导入
+		operationMap.put("importExcelView", "导入");
+		//exportExcel 导出
+		operationMap.put("exportExcel", "导出");
+		//downloadTemplate 模板下载
+		operationMap.put("downloadTemplate", "模板下载");
+	}
 	
 	int listLimit = 0;
 	{
@@ -22,7 +39,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 
 	public OutPutFile getOutPutFile() {
 		String fileOutputStr = "";
-		String fileFullName = path + "/templates/" +module+"/"+ entityName.toLowerCase() + "/list.html";
+		String fileFullName = path + "/templates/" +module+"/"+ entityName.toLowerCase() + "/"+htmlName;
 		//HTML<head>
 		String htmlHead = htmlHead();
 		//body之前的script
@@ -38,19 +55,13 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		
 		return GeneratorUtil.getOutPutFile(fileFullName, fileOutputStr);
 	}
+	
+	
 	//HTML<body>
 	private String htmlBody() {
 		String str = n+"<body>";
 		//top-barcenter导航栏
-		String topBar = n+
-				"	<div class=\"top-barcenter\">\r\n" + 
-				"		<ul class=\"breadcrumb top-breadcrumb\">\r\n" + 
-				"			<li><i class=\"fa fa-home\"></i></li>\r\n" + 
-				"			<li>"+moduleName+"</li>\r\n" + 
-				"			<li><a href=\"/"+entityName+"/list\">"+moduleName+"列表</a></li>\r\n" + 
-				"		</ul>\r\n" + 
-				"		<ul class=\"top-toolbar\"></ul>\r\n" + 
-				"	</div>";
+		String topBar = topBar();
 		//div main-wrap主体内容
 		String mainDiv = n+
 				"	<div class=\"main-wrap\">\r\n" ;
@@ -63,7 +74,6 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		String tableHead = tableHead();
 		//table-tbody
 		String tableBody = tableBody();
-		
 		table+=tableHead+tableBody+n+tab2+"</table>";
 		//div-pagination
 		String pagination= pagination();
@@ -71,22 +81,28 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		str+=topBar+mainDiv+"</body>";
 		return str;
 	}
-	//
-	public String toolBar() {
-		String str = n+
-				"		<div class=\"toolbar-wrap\">\r\n" + 
-				"			<div class=\" navbar-form navbar-left\">\r\n" + 
-				"				<a href=\"/"+entityName+"/add\">\r\n" + 
-				"					<button class=\"btn btn-default\">\r\n" + 
-				"						<span class=\"fa fa-file\"></span> 新建\r\n" + 
-				"					</button>\r\n" + 
-				"				</a>\r\n" + 
-				"			</div>\r\n" + 
-				"		</div>";
-		return str;
+
+	//导航栏
+	private String topBar() {
+		String topBar = n+
+				"	<div class=\"top-barcenter\">\r\n" + 
+				"		<ul class=\"breadcrumb top-breadcrumb\">\r\n" + 
+				"			<li><i class=\"fa fa-home\"></i></li>\r\n" ; 
+				if(parenModuleName!=null||!parenModuleName.equals("")) {
+					topBar+="			<li>"+parenModuleName+"</li>\r\n";
+				}
+				if(moduleName!=null||!moduleName.equals("")) {
+					topBar+="			<li>"+moduleName+"</li>\r\n";
+				}
+		topBar+=
+				"			<li><a href=\"/"+entityName+"/list\">"+moduleName+HtmlZHName+"</a></li>\r\n" + 
+				"		</ul>\r\n" + 
+				"		<ul class=\"top-toolbar\"></ul>\r\n" + 
+				"	</div>";
+		return topBar;
 	}
 
-	//
+	//tableHead
 	public String tableHead() {
 		String str = n+
 				"			<thead>\r\n" + 
@@ -117,7 +133,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		return str;
 	}
 
-	//
+	//分页 pagination
 	public String pagination() {
 		String str =n+
 				"		<div align=\"right\">\r\n" + 
@@ -128,7 +144,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 				"				<li><a href=\"javascript:void(0)\" onclick=\"lastPage()\">尾页</a></li>\r\n" + 
 				"				<li>&ensp;\r\n" + 
 				"					<td th:text=\"${pageNum}\"></td>/\r\n" + 
-				"					<td th:text=\"${TotalPages}\"></td>&ensp;页\r\n" + 
+				"					<td th:text=\"${totalPages}\"></td>&ensp;页\r\n" + 
 				"				</li>\r\n" + 
 				"				<li>总&ensp;\r\n" + 
 				"					<td th:text=\"${allnum}\"></td>&ensp;条&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;\r\n" + 
@@ -138,7 +154,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		return str;
 	}
 
-	//
+	//tableBody
 	public String tableBody() {
 		String str =n+
 				"			<tbody>\r\n" + 
@@ -177,14 +193,14 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		return str;
 	}
 
-	//
+	//搜索栏
 	public String searchBar() {
 		String str =n+
 				"		<div class=\"toolbar-wrap\">\r\n" + 
 				"			<form id=\"search_form\" role=\"search\"\r\n" + 
 				"				method=\"get\">\r\n" + 
 				"				<div class=\"search-box\">\r\n" + 
-				"					<div class=\"row search-input\">\r\n" ;
+				"					<div class=\"row search-input navbar-right\">\r\n" ;
 		String search_input ="";
 	
 		if(colList!=null&&colList.size()>0) {
@@ -208,7 +224,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 			}
 			//搜索按钮
 			search_input +=n+
-					"						<div class=\"col-xs-2\">\r\n" + 
+					"						<div class=\"col-xs-3\">\r\n" + 
 					"							<input type=\"button\" class=\"search-btn btn btn-primary\"\r\n" + 
 					"								onclick=\"search()\" style=\"width: 100%;\" value=\"搜索\">\r\n" + 
 					"						</div>" ;
@@ -219,6 +235,29 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 				"				</div>\r\n" + 
 				"			</form>\r\n" + 
 				"		</div>";
+		return str;
+	}
+	//工具栏按钮
+	public String toolBarButton(String operation,String operationName) {
+		String str = "";
+		str +=	"				<a href=\"/"+entityName+"/"+operation+"\">\r\n" + 
+				"					<button class=\"btn btn-default\">\r\n" + 
+				"						<span class=\"fa fa-file\"></span> "+operationName+"\r\n" + 
+				"					</button>\r\n" + 
+				"				</a>\r\n";	
+		return str;
+		
+	}
+	//工具栏
+	public String toolBar() {
+		String str = n+
+			"		<div class=\"toolbar-wrap\">\r\n" + 
+			"			<div class=\"navbar-left\">\r\n" ; 
+		for(Map.Entry<String,String> entry : operationMap.entrySet()) {
+			str += toolBarButton(entry.getKey(),entry.getValue());//生成所有操作按钮
+		}
+		str+="			</div>"+n;
+		str+="		</div>";
 		return str;
 	}
 
@@ -259,12 +298,8 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 				"	var url =\"/"+entityName+"/list?\";\r\n" + 
 				"	var pageUrl =url+\"pageNum=\";\r\n" + 
 				"	var pageNum= [[${pageNum}]];   //当前页数\r\n" + 
-				"	var totalPage = [[${TotalPages}]]; //总共页数\r\n" + 
+				"	var totalPage = [[${totalPages}]]; //总共页数\r\n" + 
 				"	\r\n" + 
-				"	//将url中拼接的空条件去除\r\n" + 
-				"	function serializeNotNull(serStr){\r\n" + 
-				"	    return serStr.split(\"&\").filter(str => !str.endsWith(\"=\")).join(\"&\");\r\n" + 
-				"	}\r\n" + 
 				"	//根据表单form获得查询url的条件\r\n" + 
 				"	function getFormParams(serId){\r\n" + 
 				"		return serializeNotNull($(\"#search_form\").serialize());\r\n" + 
@@ -335,16 +370,16 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 	private String htmlHead() {
 		String str = n+ 
 				"<head>\r\n" + 
-				"<meta charset=\"utf-8\" />\r\n" + 
-				"<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n" + 
-				"<meta name=\"list\" content=\"width=device-width, initial-scale=1\" />\r\n" + 
-				"<script th:src=\"@{/Content/assets/lib/jquery-2.1.1.min.js}\"></script>\r\n" + 
-				"<script th:src=\"@{/Content/assets/lib/aYin/aYin.js}\"></script>\r\n" + 
-				"<script th:src=\"@{/Content/assets/lib/bootstrap/js/bootstrap.min.js}\"></script>\r\n" + 
-				"<script th:src=\"@{/Content/assets/init/loadFiles.js}\"></script>\r\n" + 
-				"\r\n" + 
-				"<script th:src=\"@{/Content/js/datepicker/WdatePicker.js}\"></script>\r\n" + 
-				"<link th:href=\"@{/Content/js/datepicker/skin/WdatePicker.css}\" rel=\"stylesheet\" />\r\n" + 
+				"    <meta charset=\"utf-8\" />\r\n" + 
+				"    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n" + 
+				"    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\r\n" + 
+				"    <script th:src=\"@{/Content/assets/lib/jquery-2.1.1.min.js}\"></script>\r\n" + 
+				"    <script th:src=\"@{/Content/assets/lib/aYin/aYin.js}\"></script>\r\n" + 
+				"    <script th:src=\"@{/Content/assets/lib/bootstrap/js/bootstrap.min.js}\"></script>\r\n" + 
+				"    <script th:src=\"@{/Content/assets/init/loadFiles.js}\"></script>\r\n" + 
+				"    <script th:src=\"@{/Content/js/util/StringUtils.js}\"></script>\r\n" + 
+				"	<script th:src=\"@{/Content/js/datepicker/WdatePicker.js}\"></script>\r\n" + 
+				"    <link th:href=\"@{/Content/js/datepicker/skin/WdatePicker.css}\" rel=\"stylesheet\" />\r\n" + 
 				"</head>";
 		return str;
 	}

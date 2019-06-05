@@ -31,21 +31,34 @@ public class RecordViewHtmlHepler implements CreateFileHelper,HtmlHelper{
 
 		return GeneratorUtil.getOutPutFile(fileFullName, fileOutputStr);
 	}
+	//导航栏
+	private String topBar() {
+		String topBar = n+
+				"	<div class=\"top-barcenter\">\r\n" + 
+				"		<ul class=\"breadcrumb top-breadcrumb\">\r\n" + 
+				"			<li><i class=\"fa fa-home\"></i></li>\r\n" ; 
+				if(parenModuleName!=null||!parenModuleName.equals("")) {
+					topBar+="			<li>"+parenModuleName+"</li>\r\n";
+				}
+				if(moduleName!=null||!moduleName.equals("")) {
+					topBar+="			<li>"+moduleName+"</li>\r\n";
+				}
+		topBar+=
+				"			<li><a href=\"/"+entityName+"/list\">"+moduleName+HtmlZHName+"</a></li>\r\n" + 
+				"		</ul>\r\n" + 
+				"		<ul class=\"top-toolbar\"></ul>\r\n" + 
+				"	</div>";
+		return topBar;
+	}
 
 	// body之后的script
 	private String htmlBody() {
 		String str = n + 
-				"<body>\r\n" + 
-				"	<div class=\"top-bar\">\r\n" + 
-				"		<ul class=\"breadcrumb top-breadcrumb\">\r\n" + 
-				"			<li><i class=\"fa fa-home\"></i></li>\r\n" + 
-				"			<li>"+moduleName+"</li>\r\n" + 
-				"			<li><a href=\"/"+entityName+"/list\">"+moduleName+"列表</a></li>\r\n" + 
-				"			<li>"+moduleName+HtmlZHName+"</li>\r\n" + 
-				"		</ul>\r\n" + 
-				"		<ul class=\"top-toolbar\"></ul>\r\n" + 
-				"	</div>\r\n" + 
-				"	<div align=\"center\">\r\n" + 
+				"<body>\r\n";
+		//top-barcenter导航栏
+		String topBar = topBar();
+		str +=	topBar+n;
+		str +=	"	<div align=\"center\">\r\n" + 
 				"		<form action=\"#\" th:action=\"@{/"+entityName+"/save}\" th:object=\"${"+entityLowerName+"}\"\r\n" + 
 				"			method=\"post\">\r\n"+
 				"			<p>\r\n" + 

@@ -31,7 +31,27 @@ public class RecordAddHtmlHepler implements CreateFileHelper,HtmlHelper{
 		return GeneratorUtil.getOutPutFile(fileFullName, fileOutputStr);
 	}
 
-	// body之后的script
+	//导航栏
+	private String topBar() {
+		String topBar = n+
+				"	<div class=\"top-barcenter\">\r\n" + 
+				"		<ul class=\"breadcrumb top-breadcrumb\">\r\n" + 
+				"			<li><i class=\"fa fa-home\"></i></li>\r\n" ; 
+				if(parenModuleName!=null||!parenModuleName.equals("")) {
+					topBar+="			<li>"+parenModuleName+"</li>\r\n";
+				}
+				if(moduleName!=null||!moduleName.equals("")) {
+					topBar+="			<li>"+moduleName+"</li>\r\n";
+				}
+		topBar+=
+				"			<li><a href=\"/"+entityName+"/list\">"+moduleName+HtmlZHName+"</a></li>\r\n" + 
+				"		</ul>\r\n" + 
+				"		<ul class=\"top-toolbar\"></ul>\r\n" + 
+				"	</div>";
+		return topBar;
+	}
+	
+	// htmlBody
 	private String htmlBody() {
 		String str = n + 
 				"<body>\r\n" + 

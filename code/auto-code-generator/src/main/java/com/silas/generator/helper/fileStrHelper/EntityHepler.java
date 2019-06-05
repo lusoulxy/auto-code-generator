@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.silas.generator.Config;
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.OutPutFile;
-import com.silas.generator.helper.interface_.Config;
 import com.silas.generator.helper.interface_.CreateFileHelper;
 import com.silas.util.GeneratorUtil;
 import com.silas.util.StringUtils;
@@ -63,7 +63,7 @@ public class EntityHepler implements CreateFileHelper {
 			//getter方法
 			String className =column.getColumnTypeHelper().getClassName();
 			String entityField = column.getEntityField();
-			String fieldUpperFirst = StringUtils.toUpperCaseFirstOne(entityField);
+			String fieldUpperFirst = column.getEntityFieldUpperFisrt();
 			str += n+tab+"public "+className+" get"+fieldUpperFirst+"(){";
 			str += n+tab2+"return this."+entityField+";";
 			str += n+tab+"}";
@@ -83,7 +83,7 @@ public class EntityHepler implements CreateFileHelper {
 			String className =column.getColumnTypeHelper().getClassName();
 			if(Config.CODE_ID.equals("DHC_WEB")) {
 				if(className.equals("Date")) {
-					str+=n+"@DateTimeFormat(pattern = \"yyyy-MM-dd\")";
+					str+=n+"	@DateTimeFormat(pattern = \"yyyy-MM-dd\")";
 					importStrs.put("\timport org.springframework.format.annotation.DateTimeFormat;", "");
 				}
 				str += n+tab+"private "+className+" "+column.getEntityField()+";//"+column.getRemark();
