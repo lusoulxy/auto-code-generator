@@ -10,14 +10,14 @@ import com.silas.jdbc.DBConifguration;
 import com.silas.util.GeneratorUtil;
 
 public class Config {
-	{//设置模块参数
+	static {//设置模块参数
 		//		添加 销售月表统计表 模块代码	
-		tableName = "S_SALES_MONTH";//数据库表名
-		entityName = "SalesMonth";//对应实体类名
-		packagePath = "com.hzsh.salesMonth";//包名
-		module = "statistics";
-		parenModuleName = "统计";//大模块名
-		moduleName = "销售月统计";//模块中文名，用于生成注释与日志相关
+		tableName = "human_basic_info";//数据库表名
+		entityName = "HumanBasicInfo";//对应实体类名
+		packagePath = "com.silas.human.basicInfo";//包名
+		module = "human";
+		parenModuleName = "人物信息";//大模块名
+		moduleName = "基本信息";//模块中文名，用于生成注释与日志相关
 	}
 	public static String tableName;//数据库表名
 	public static String entityName;//对应实体类名
@@ -28,20 +28,24 @@ public class Config {
 	
 	public static String CODE_ID="DHC_WEB";//代码id
 	
+	public final static String DATABASE_NAME = "social_network";
+	
+	//JDBC与java类型对应哈希表
+	public static Map<String,ColumnTypeHelper> JDBC_JAVA_MAP = new HashMap<String,ColumnTypeHelper>();
 	//数据库配置类
 	public static DBConifguration dbConifguration =new DBConifguration();
-	{//数据库参数配置
+	static {//数据库参数配置
 		//mySql
-//		String driverClassName = "com.mysql.jdbc.Driver";
-//		String url = "jdbc:mysql://120.79.172.52:3306/social_network"; // lhdw为数据库的SID
-//		String username = "root";//prices,hzshcxc
-//		String password = "root=1314@=xhh";//Prices1234,cxcHZSH1234
+		String driverClassName = "com.mysql.jdbc.Driver";
+		String url = "jdbc:mysql://localhost:3306/"+DATABASE_NAME+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"; // lhdw为数据库的SID
+		String username = "root";//prices,hzshcxc
+		String password = "root=1314@=xhh";//Prices1234,cxcHZSH1234
 		
 		//oracle
-		String driverClassName = "oracle.jdbc.OracleDriver";
-		String url = "jdbc:oracle:thin:@10.152.71.12:1521:lhdw"; // lhdw为数据库的SID
-		String username = "hzshcxc";//prices,hzshcxc
-		String password = "cxcHZSH1234";//Prices1234,cxcHZSH1234
+//		String driverClassName = "oracle.jdbc.OracleDriver";
+//		String url = "jdbc:oracle:thin:@10.152.71.12:1521:lhdw"; // lhdw为数据库的SID
+//		String username = "hzshcxc";//prices,hzshcxc
+//		String password = "cxcHZSH1234";//Prices1234,cxcHZSH1234
 		
 //		 url: jdbc:sqlserver://10.152.71.192:1433;DatabaseName=Honeywell.MES
 //		driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
@@ -53,22 +57,10 @@ public class Config {
 		dbConifguration.setPassword(password);
 		dbConifguration.setUrl(url);
 		dbConifguration.setUsername(username);
-		//判断数据库类型
-		if(driverClassName.equals("oracle.jdbc.OracleDriver")) {
-			DBConifguration.IS_ORACEL=true;
-		}
-	}
-	
-	public static String entityLowerName = "";//实体类名的小驼峰命名
-	public static String path = "D:/temp";//代码文件输出路径
-	public static List<Column> colList ;//根据表名获取的列元数据 
-	public static Column primary_col = new Column();//根据表名获取的主键
-	
-	//JDBC与java类型对应哈希表
-	public static Map<String,ColumnTypeHelper> JDBC_JAVA_MAP = new HashMap<String,ColumnTypeHelper>();
-	{//JDBC与java类型对应哈希表配置
-		if(DBConifguration.IS_ORACEL) {//
-			ColumnTypeHelper columnHelper = null;
+		
+		//JDBC与java类型对应哈希表配置
+		ColumnTypeHelper columnHelper = null;
+		if(driverClassName.equals("oracle.jdbc.OracleDriver")) {//
 			//JDBC与java类型对应哈希表设置
 			columnHelper = new ColumnTypeHelper("java.lang.String");
 			columnHelper.setImportStr("");
@@ -80,13 +72,34 @@ public class Config {
 			columnHelper = new ColumnTypeHelper("java.math.BigDecimal");
 			columnHelper.setImportStr("\nimport java.math.BigDecimal;");
 			columnHelper.setJdbcType("DECIMAL");
-			
 			JDBC_JAVA_MAP.put("NUMBER", columnHelper);
+			
 			columnHelper = new ColumnTypeHelper("java.util.Date");
 			columnHelper.setImportStr("\nimport java.util.Date;");
 			columnHelper.setJdbcType("TIMESTAMP");
 			JDBC_JAVA_MAP.put("DATE", columnHelper);
+		}else if(driverClassName.equals("com.mysql.jdbc.Driver")) {
+			//JDBC与java类型对应哈希表设置
+			columnHelper = new ColumnTypeHelper("java.lang.String");
+			columnHelper.setImportStr("");
+			columnHelper.setJdbcType("VARCHAR");
+			JDBC_JAVA_MAP.put("VARCHAR", columnHelper);
+			
+			columnHelper = new ColumnTypeHelper("java.util.Date");
+			columnHelper.setImportStr("\nimport java.util.Date;");
+			columnHelper.setJdbcType("TIMESTAMP");
+			JDBC_JAVA_MAP.put("DATE", columnHelper);
+			JDBC_JAVA_MAP.put("DATETIME", columnHelper);
+			
 		}
+	}
+	
+	public static String entityLowerName = "";//实体类名的小驼峰命名
+	public static String path = "D:/temp";//代码文件输出路径
+	public static List<Column> colList ;//根据表名获取的列元数据 
+	public static Column primary_col;//根据表名获取的主键
+	
+	{
 	}
 	
 	//其他数据处理

@@ -90,11 +90,6 @@ public class Column {
 		this.columType = columType;
 	}
 
-	@Override
-	public String toString() {
-		return "Column [columName=" + columName + ", columType=" + columType + "]";
-	}
-
 	public String getJdbcType() {
 		// TODO Auto-generated method stub
 		return getColumnTypeHelper().getJdbcType();
@@ -108,4 +103,13 @@ public class Column {
 	public String getEntityFieldUpperFisrt() {
 		return StringUtils.toUpperCaseFirstOne(StringUtils.getLowerCamelCase(columName.toLowerCase()));
 	}
+
+	@Override
+	public String toString() {
+		return "Column [tableName=" + tableName + ", columName=" + columName + ", columType=" + columType + ", isPk="
+				+ isPk + ", isPkAuto=" + isPkAuto + ", remark=" + remark + ", columnTypeHelper=" + columnTypeHelper
+				+ "]";
+	}
+	
+	
 }

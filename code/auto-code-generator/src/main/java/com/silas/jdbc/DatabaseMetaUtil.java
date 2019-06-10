@@ -37,7 +37,7 @@ public class DatabaseMetaUtil {
 //                info.put("proxy_password", "P@ssword");
                 info.put("user", "root");
                 info.put("password", "root=1314@=xhh");
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + DATABASE_NAME, info);
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + DATABASE_NAME+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC", info);
                 dbMetaData = con.getMetaData();
             }
         } catch (ClassNotFoundException e) {
@@ -348,7 +348,7 @@ public class DatabaseMetaUtil {
 //         metaData.getAllSchemas();
          metaData.getAllTableList("social_network");
          
-         Map map = metaData.getColumnNameBySchemaNameAndTableName("social_network","user");
+         Map map = metaData.getColumnNameBySchemaNameAndTableName("social_network","human_basic_info");
         // metaData.getTableColumns("root", "gen_person");
         // System.out.println("=======================");
         // metaData.getIndexInfo("root", "gen_person");

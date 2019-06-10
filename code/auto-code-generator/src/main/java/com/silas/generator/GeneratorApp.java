@@ -7,6 +7,7 @@ package com.silas.generator;
 public class GeneratorApp 
 {
 	public static void main(String[] args) {
-		new Generator().generateCode();
+//		new Generator().generateCode();
+		new Generator2mysql().generateCode();
 	}
 }
