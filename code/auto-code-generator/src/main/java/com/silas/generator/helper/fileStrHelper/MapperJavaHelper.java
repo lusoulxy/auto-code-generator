@@ -25,7 +25,10 @@ public class MapperJavaHelper implements CreateFileHelper{
 		// import导入类
 		String importStr = "import java.util.List;\r\n" + "import java.util.Map;\r\n"
 				+ "import org.apache.ibatis.annotations.Mapper;\r\n" + "import " + packagePath + ".entity." + entityName
-				+ ";" +primary_col.getColumnTypeHelper().getImportStr()+ n;
+				+ ";" ;
+		if(primary_col.isPk()){
+			importStr += primary_col.getColumnTypeHelper().getImportStr()+ n;
+		}
 		// 类开始
 		String classStart = "@Mapper" + n + "public interface " + entityName + "Mapper {" + n;
 

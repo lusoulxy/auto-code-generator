@@ -64,7 +64,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		String topBar = topBar();
 		//div main-wrap主体内容
 		String mainDiv = n+
-				"	<div class=\"main-wrap\">\r\n" ;
+				"	<div class=\"main-wrap\">" ;
 		//toolbar-wrap search_form 工具栏-搜索
 		String searchBar = searchBar();
 		//toolbar-wrap navbar-form 工具栏（新增、导入、导出、模板下载等）
@@ -107,7 +107,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		String str = n+
 				"			<thead>\r\n" + 
 				"				<tr align=\"center\">\r\n" + 
-				"					<th width=\"100px\">序号</th>\r\n" ;
+				"					<th width=\"100px\">序号</th>" ;
 		String ths="";
 		for(int i=0;i<listLimit;i++) {
 			String colZHName = colList.get(i).getRemark();//列中文名，待完善 TODO
@@ -115,12 +115,12 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		}
 		
 		//限制的以注释形式生成
-		ths +=n+"					<!-- "+n;
+		ths +=n+"					<!-- ";
 		for(int i=listLimit;i<colList.size();i++) {
 			String colZHName = colList.get(i).getRemark();//列中文名，待完善 TODO
 			ths += n+"					<th>"+colZHName+"</th>";
 		}
-		ths +=n+"					 -->"+n;
+		ths +=n+"					 -->";
 		
 //		for(Column column:colList) {
 //			String colZHName = column.getRemark();//列中文名，待完善 TODO
@@ -165,18 +165,21 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 			Column column = colList.get(i);
 			String colName = column.getEntityField();
 			tds +="					<!-- "+column.getRemark()+" -->"+n;
-			tds +="					<td th:title=\"${"+recordName+"."+colName+"}\" th:text=\"${"+recordName+"."+colName+"}\"></td>\r\n" ;
+			if(column.getJavaType().equals("Date")) {
+				tds +="					<td th:title=\"${#dates.format("+recordName+"."+colName+", 'yyyy-MM-dd')}\" th:text=\"${#dates.format("+recordName+"."+colName+", 'yyyy-MM-dd')}\"></td>\r\n" ;
+			}else {
+				tds +="					<td th:title=\"${"+recordName+"."+colName+"}\" th:text=\"${"+recordName+"."+colName+"}\"></td>\r\n" ;
+			}
 		}
 		
 		//限制的列以注释形式生成
-		tds +="					<!-- "+n;
 		for(int i=listLimit;i<colList.size();i++) {
 			Column column = colList.get(i);
 			String colName = column.getEntityField();
-			tds +="					"+column.getRemark()+n;
+			tds +="					<!-- "+column.getRemark()+n;
 			tds +="					<td th:title=\"${"+recordName+"."+colName+"}\" th:text=\"${"+recordName+"."+colName+"}\"></td>\r\n" ;
+			tds +="					 -->"+n;
 		}
-		tds +="					 -->"+n;
 //		for(Column column : colList) {
 //			String colName = column.getEntityField();
 //			tds +="					<!-- "+column.getRemark()+" -->";
@@ -195,12 +198,12 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 
 	//搜索栏
 	public String searchBar() {
-		String str =n+
+		String str =
 				"		<div class=\"toolbar-wrap\">\r\n" + 
 				"			<form id=\"search_form\" role=\"search\"\r\n" + 
 				"				method=\"get\">\r\n" + 
 				"				<div class=\"search-box\">\r\n" + 
-				"					<div class=\"row search-input navbar-right\">\r\n" ;
+				"					<div class=\"row search-input navbar-right\">" ;
 		String search_input ="";
 	
 		if(colList!=null&&colList.size()>0) {
@@ -216,7 +219,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 					continue;//主键id自动生成，不进行操作
 				String colName = column.getEntityField();
 				String colZHName = column.getRemark();//列中文名，待完善 TODO
-				search_input += n+
+				search_input +=
 						"						<div class=\"col-xs-3\">\r\n" + 
 						"								<input type=\"text\" class=\"form-control \" id=\""+colName+"\" name=\""+colName+"\"\r\n" + 
 						"									th:value=\"${searchMap['"+colName+"']}\" placeholder=\"请输入"+colZHName+"\">\r\n" + 
@@ -240,6 +243,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 	//工具栏按钮
 	public String toolBarButton(String operation,String operationName) {
 		String str = "";
+		str +=  "				<!-- <a class=\"btn btn-default\" href=\"/"+entityName+"/"+operation+"\"><span class=\"fa fa-file\"></span> "+operationName+"</a> -->"+n;
 		str +=	"				<a href=\"/"+entityName+"/"+operation+"\">\r\n" + 
 				"					<button class=\"btn btn-default\">\r\n" + 
 				"						<span class=\"fa fa-file\"></span> "+operationName+"\r\n" + 

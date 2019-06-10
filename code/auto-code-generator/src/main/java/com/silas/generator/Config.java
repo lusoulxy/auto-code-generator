@@ -11,13 +11,13 @@ import com.silas.util.GeneratorUtil;
 
 public class Config {
 	{//设置模块参数
-//		添加 中间物料 模块代码	
-		tableName = "I_END_PRICE";//数据库表名
-		entityName = "IEndPrice";//对应实体类名
-		packagePath = "com.hzsh.IEndPrice";//包名
-		module = "IEndPrice";
-		parenModuleName = "中间物料";//大模块名
-		moduleName = "中间物料";//模块中文名，用于生成注释与日志相关
+		//		添加 销售月表统计表 模块代码	
+		tableName = "S_SALES_MONTH";//数据库表名
+		entityName = "SalesMonth";//对应实体类名
+		packagePath = "com.hzsh.salesMonth";//包名
+		module = "statistics";
+		parenModuleName = "统计";//大模块名
+		moduleName = "销售月统计";//模块中文名，用于生成注释与日志相关
 	}
 	public static String tableName;//数据库表名
 	public static String entityName;//对应实体类名
@@ -40,8 +40,8 @@ public class Config {
 		//oracle
 		String driverClassName = "oracle.jdbc.OracleDriver";
 		String url = "jdbc:oracle:thin:@10.152.71.12:1521:lhdw"; // lhdw为数据库的SID
-		String username = "prices";//prices,hzshcxc
-		String password = "Prices1234";//Prices1234,cxcHZSH1234
+		String username = "hzshcxc";//prices,hzshcxc
+		String password = "cxcHZSH1234";//Prices1234,cxcHZSH1234
 		
 //		 url: jdbc:sqlserver://10.152.71.192:1433;DatabaseName=Honeywell.MES
 //		driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver

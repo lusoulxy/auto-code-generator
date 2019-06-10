@@ -68,7 +68,7 @@ public class Generator extends Config {
 			// 数据库表字段元数据
 			resultSet = dBMetaData.getColumns(null, "%", tableName, "%");
 			Column column = null;
-			ResultSetMetaData setMeta = resultSet.getMetaData();
+//			ResultSetMetaData setMeta = resultSet.getMetaData();
 //			for(int i=1;i<setMeta.getColumnCount();i++) {
 //				System.out.println(setMeta.getColumnName(i));
 //			}
@@ -76,6 +76,7 @@ public class Generator extends Config {
 				column = new Column();
 //				column.setTableName(resultSet.getString("TABLE_NAME"));//表名
 				String columnName = resultSet.getString("COLUMN_NAME");
+				System.out.print(columnName+",");
 				column.setColumName(columnName);// 字段名
 				String typeName = resultSet.getString("TYPE_NAME");// 字段类型
 				column.setColumType(typeName);

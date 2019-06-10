@@ -84,7 +84,7 @@ public class EntityHepler implements CreateFileHelper {
 			if(Config.CODE_ID.equals("DHC_WEB")) {
 				if(className.equals("Date")) {
 					str+=n+"	@DateTimeFormat(pattern = \"yyyy-MM-dd\")";
-					importStrs.put("\timport org.springframework.format.annotation.DateTimeFormat;", "");
+					importStrs.put(n+"import org.springframework.format.annotation.DateTimeFormat;", "");
 				}
 				str += n+tab+"private "+className+" "+column.getEntityField()+";//"+column.getRemark();
 			}else {

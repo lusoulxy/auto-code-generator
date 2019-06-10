@@ -31,17 +31,13 @@ public class DatabaseMetaUtil {
 //                con = DriverManager.getConnection(url, user, password);
                 Properties info = new Properties();
                 // info.put("proxy_type", "4"); // SSL Tunneling
-//    			props.put("proxy_host", "dlhz.cnooc");
-//    			props.put("proxy_port", "8080");
-//    			props.put("proxy_user", "ex_huangchr");
-//    			props.put("proxy_password", "P@ssword");
-                info.put("proxy_host", "dlhz.cnooc");
-                info.put("proxy_port", "8080");
-                info.put("proxy_user", "ex_huangchr");
-                info.put("proxy_password", "P@ssword");
-                info.put("user", "[root]");
-                info.put("password", "[root=1314@=xhh]");
-                con = DriverManager.getConnection("jdbc:mysql://120.79.172.52:3306/" + DATABASE_NAME, info);
+//                info.put("proxy_host", "dlhz.cnooc");
+//                info.put("proxy_port", "8080");
+//                info.put("proxy_user", "ex_huangchr");
+//                info.put("proxy_password", "P@ssword");
+                info.put("user", "root");
+                info.put("password", "root=1314@=xhh");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + DATABASE_NAME, info);
                 dbMetaData = con.getMetaData();
             }
         } catch (ClassNotFoundException e) {
