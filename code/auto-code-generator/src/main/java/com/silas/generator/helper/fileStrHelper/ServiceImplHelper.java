@@ -1,16 +1,13 @@
 package com.silas.generator.helper.fileStrHelper;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.OutPutFile;
 import com.silas.generator.helper.interface_.CreateFileHelper;
 import com.silas.util.GeneratorUtil;
 import com.silas.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServiceImplHelper implements CreateFileHelper{
 	Map<String,String> importMap = new HashMap<String,String>();
@@ -179,6 +176,9 @@ public class ServiceImplHelper implements CreateFileHelper{
 				if(javaType.equals("Date")) {
 					importMap.put(n+"import java.text.SimpleDateFormat;", "");
 					s += "							Date colvalue = new SimpleDateFormat(\""+dateFormatPartten+"\").parse("+field+");\r\n";
+				}
+				if(javaType.equals("Integer")) {
+					s += "							Integer colvalue = Integer.parseInt("+field+");\r\n";
 				}
 				s += 
 				"							// 给字段赋值\r\n" + 

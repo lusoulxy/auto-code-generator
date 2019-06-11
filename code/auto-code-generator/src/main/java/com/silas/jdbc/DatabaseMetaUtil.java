@@ -140,7 +140,7 @@ public class DatabaseMetaUtil {
     public Map<String, Field> getColumnNameBySchemaNameAndTableName(String schemaName, String tableName) {
         Map<String, Field> columns = null;
         try {
-            columns = new HashMap<>();
+            columns = new HashMap<String,Field>();
             ResultSet rs = dbMetaData.getColumns(schemaName, schemaName, tableName, "%");
             while (rs.next()) {
                 String columnName = rs.getString("COLUMN_NAME");// 列名

@@ -1,13 +1,13 @@
 package com.silas.generator;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.ColumnTypeHelper;
 import com.silas.jdbc.DBConifguration;
 import com.silas.util.GeneratorUtil;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Config {
 	static {//设置模块参数
@@ -37,9 +37,14 @@ public class Config {
 	static {//数据库参数配置
 		//mySql
 		String driverClassName = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://localhost:3306/"+DATABASE_NAME+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"; // lhdw为数据库的SID
+		String url = "jdbc:mysql://120.79.172.52:3306/"+DATABASE_NAME+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"; // lhdw为数据库的SID
 		String username = "root";//prices,hzshcxc
 		String password = "root=1314@=xhh";//Prices1234,cxcHZSH1234
+
+//		String driverClassName = "com.mysql.jdbc.Driver";
+//		String url = "jdbc:mysql://localhost:3306/"+DATABASE_NAME+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"; // lhdw为数据库的SID
+//		String username = "root";//prices,hzshcxc
+//		String password = "root=1314@=xhh";//Prices1234,cxcHZSH1234
 		
 		//oracle
 //		String driverClassName = "oracle.jdbc.OracleDriver";
@@ -90,7 +95,16 @@ public class Config {
 			columnHelper.setJdbcType("TIMESTAMP");
 			JDBC_JAVA_MAP.put("DATE", columnHelper);
 			JDBC_JAVA_MAP.put("DATETIME", columnHelper);
-			
+
+			columnHelper = new ColumnTypeHelper("java.lang.Integer");
+			columnHelper.setImportStr("");
+			columnHelper.setJdbcType("INTEGER");
+			JDBC_JAVA_MAP.put("INT", columnHelper);
+
+			columnHelper = new ColumnTypeHelper("java.math.BigDecimal");
+			columnHelper.setImportStr("\nimport java.math.BigDecimal;");
+			columnHelper.setJdbcType("DECIMAL");
+			JDBC_JAVA_MAP.put("DECIMAL", columnHelper);
 		}
 	}
 	
@@ -98,12 +112,9 @@ public class Config {
 	public static String path = "D:/temp";//代码文件输出路径
 	public static List<Column> colList ;//根据表名获取的列元数据 
 	public static Column primary_col;//根据表名获取的主键
-	
-	{
-	}
-	
+
 	//其他数据处理
-	{
+	static {
 		//实体类名的小驼峰命名
 		entityLowerName=GeneratorUtil.toLowerCaseFirstOne(entityName);
 		//模块名
