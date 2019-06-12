@@ -46,7 +46,7 @@ public class ServiceImplHelper implements CreateFileHelper{
 				"	// 根据主键更新记录，选择字段更新\r\n" + 
 				"	@Override\r\n" + 
 				"	public int update("+entityName+" "+StringUtils.getLowerCamelCase(entityName)+") {\r\n" + 
-				"		return "+StringUtils.getLowerCamelCase(entityName)+"Mapper.updateByPrimaryKey("+StringUtils.getLowerCamelCase(entityName)+");\r\n" + 
+				"		return "+StringUtils.getLowerCamelCase(entityName)+"Mapper.updateByPrimaryKeySelective("+StringUtils.getLowerCamelCase(entityName)+");\r\n" + 
 				"	}\r\n" + 
 				"\r\n" + 
 				"	// 根据主键删除\r\n" + 
@@ -109,7 +109,7 @@ public class ServiceImplHelper implements CreateFileHelper{
 		importMap.put(n+"import org.apache.poi.ss.usermodel.Cell;", "");
 		importMap.put(n+"import org.apache.poi.hssf.usermodel.HSSFWorkbook;", "");
 		importMap.put(n+"import java.io.InputStream;", "");
-		importMap.put(n+"import com.hzsh.util.MyException;", "");
+		importMap.put(n+"import com.silas.util.MyException;", "");
 		importMap.put(n+"import "+packagePath+".entity."+entityName+";", "");
 		String s = n+
 				"	/**\r\n" + 
@@ -178,6 +178,9 @@ public class ServiceImplHelper implements CreateFileHelper{
 					s += "							Date colvalue = new SimpleDateFormat(\""+dateFormatPartten+"\").parse("+field+");\r\n";
 				}
 				if(javaType.equals("Integer")) {
+					s += "							Integer colvalue = Integer.parseInt("+field+");\r\n";
+				}
+				if(javaType.equals("Boolean")) {
 					s += "							Integer colvalue = Integer.parseInt("+field+");\r\n";
 				}
 				s += 

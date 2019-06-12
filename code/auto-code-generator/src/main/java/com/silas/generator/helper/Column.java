@@ -6,12 +6,21 @@ public class Column {
 	private String tableName;// 所在的表名
 	private String columName;// 字段名
 	private String columType;// 字段类型
+	private String columSize;// 长度
 	private boolean isPk = false;// 是否为主键
 	private boolean isPkAuto = false;///是否自动生成主键
 	private String remark;//注释
 
 	private ColumnTypeHelper columnTypeHelper;
 	
+
+	public String getColumSize() {
+		return columSize;
+	}
+
+	public void setColumSize(String columSize) {
+		this.columSize = columSize;
+	}
 
 	public boolean isPkAuto() {
 		return isPkAuto;
@@ -106,9 +115,9 @@ public class Column {
 
 	@Override
 	public String toString() {
-		return "Column [tableName=" + tableName + ", columName=" + columName + ", columType=" + columType + ", isPk="
-				+ isPk + ", isPkAuto=" + isPkAuto + ", remark=" + remark + ", columnTypeHelper=" + columnTypeHelper
-				+ "]";
+		return "Column [tableName=" + tableName + ", columName=" + columName + ", columType=" + columType
+				+ ", columSize=" + columSize + ", isPk=" + isPk + ", isPkAuto=" + isPkAuto + ", remark=" + remark
+				+ ", columnTypeHelper=" + columnTypeHelper + "]";
 	}
 	
 	

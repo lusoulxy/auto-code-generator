@@ -11,13 +11,13 @@ import java.util.Map;
 
 public class Config {
 	static {//设置模块参数
-		//		添加 销售月表统计表 模块代码	
-		tableName = "human_basic_info";//数据库表名
-		entityName = "HumanBasicInfo";//对应实体类名
-		packagePath = "com.silas.human.basicInfo";//包名
+		//		添加 人物信息 表 模块代码	
+		tableName = "human_other_info";//数据库表名
+		entityName = "HumanOtherInfo";//对应实体类名
+		packagePath = "com.silas.human";//包名
 		module = "human";
 		parenModuleName = "人物信息";//大模块名
-		moduleName = "基本信息";//模块中文名，用于生成注释与日志相关
+		moduleName = "人物其他信息";//模块中文名，用于生成注释与日志相关
 	}
 	public static String tableName;//数据库表名
 	public static String entityName;//对应实体类名
@@ -36,15 +36,15 @@ public class Config {
 	public static DBConifguration dbConifguration =new DBConifguration();
 	static {//数据库参数配置
 		//mySql
-		String driverClassName = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://120.79.172.52:3306/"+DATABASE_NAME+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"; // lhdw为数据库的SID
-		String username = "root";//prices,hzshcxc
-		String password = "root=1314@=xhh";//Prices1234,cxcHZSH1234
-
 //		String driverClassName = "com.mysql.jdbc.Driver";
-//		String url = "jdbc:mysql://localhost:3306/"+DATABASE_NAME+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"; // lhdw为数据库的SID
+//		String url = "jdbc:mysql://120.79.172.52:3306/"+DATABASE_NAME+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"; // lhdw为数据库的SID
 //		String username = "root";//prices,hzshcxc
 //		String password = "root=1314@=xhh";//Prices1234,cxcHZSH1234
+
+		String driverClassName = "com.mysql.jdbc.Driver";
+		String url = "jdbc:mysql://localhost:3306/"+DATABASE_NAME+"?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"; // lhdw为数据库的SID
+		String username = "root";//prices,hzshcxc
+		String password = "root=1314@=xhh";//Prices1234,cxcHZSH1234
 		
 		//oracle
 //		String driverClassName = "oracle.jdbc.OracleDriver";
@@ -73,7 +73,6 @@ public class Config {
 			JDBC_JAVA_MAP.put("VARCHAR", columnHelper);
 			JDBC_JAVA_MAP.put("VARCHAR2", columnHelper);
 			JDBC_JAVA_MAP.put("NVARCHAR2", columnHelper);
-			
 			columnHelper = new ColumnTypeHelper("java.math.BigDecimal");
 			columnHelper.setImportStr("\nimport java.math.BigDecimal;");
 			columnHelper.setJdbcType("DECIMAL");
@@ -105,6 +104,13 @@ public class Config {
 			columnHelper.setImportStr("\nimport java.math.BigDecimal;");
 			columnHelper.setJdbcType("DECIMAL");
 			JDBC_JAVA_MAP.put("DECIMAL", columnHelper);
+			
+			columnHelper = new ColumnTypeHelper("java.lang.Boolean");
+			columnHelper.setImportStr("");
+			columnHelper.setJdbcType("BIT");
+			JDBC_JAVA_MAP.put("BIT-1", columnHelper);
+			
+			
 		}
 	}
 	

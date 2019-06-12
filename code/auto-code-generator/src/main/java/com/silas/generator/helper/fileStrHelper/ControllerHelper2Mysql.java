@@ -13,12 +13,10 @@ import com.silas.generator.helper.Column;
 import com.silas.generator.helper.OutPutFile;
 import com.silas.generator.helper.interface_.CreateFileHelper;
 import com.silas.util.GeneratorUtil;
-import com.silas.util.StringUtils;
 
-public class ControllerHelper implements CreateFileHelper{
+public class ControllerHelper2Mysql implements CreateFileHelper{
 	
 	Map<String,String> importMap = new HashMap<String,String>();
-	Map<String,String> modulePart = new HashMap<String,String>();
 	
 	// 生成controller/EntityNameController.java文件
 	public void createFile() {
@@ -47,10 +45,8 @@ public class ControllerHelper implements CreateFileHelper{
 		importMap.put(n+"import org.springframework.beans.factory.annotation.Autowired;", "");
 		importMap.put(n+"import javax.servlet.http.HttpServletRequest;", "");
 		importMap.put(n+"import "+packagePath+".service."+entityName+"Service;", "");
-		if(modulePart.get("systemLog")!=null) {
-			importMap.put(n+"import com.silas.configuration.service.SystemLogService;", "");
-			importMap.put(n+"import com.silas.configuration.entity.SystemLog;", "");
-		}
+		importMap.put(n+"import com.hzsh.configuration.service.SystemLogService;", "");
+		importMap.put(n+"import com.hzsh.configuration.entity.SystemLog;", "");
 		
 		//类内容
 		String classBody = 
@@ -58,17 +54,15 @@ public class ControllerHelper implements CreateFileHelper{
 				"	@Autowired\r\n" + 
 				"	private "+entityName+"Service "+entityLowerName+"Service;\r\n" + 
 				"	@Autowired\r\n" + 
-				"	HttpServletRequest request;\r\n";
-		if(modulePart.get("systemLog")!=null) {//日志模块
-			classBody += 	"	@Autowired\r\n" + 
-					"	private SystemLogService systemLogService;\r\n" + 
-					"\r\n" + 
-					"	SystemLog systemLog = new SystemLog();// 日志对象\r\n" ;
-		}
+				"	HttpServletRequest request;\r\n" + 
+				"	@Autowired\r\n" + 
+				"	private SystemLogService systemLogService;\r\n" + 
+				"\r\n" + 
+				"	SystemLog systemLog = new SystemLog();// 日志对象\r\n" ;
 		//类方法
 		String addViewMethodStr	 = addViewMethodStr();// 生成新增记录查看页的方法
 		String saveMethodStr= saveMethodStr();// 生成新增记录的方法
-		String updateviewMethodStr = updateviewMethodStr();// 生成更新记录查看页的方法
+		String updateViewMethodStr = updateViewMethodStr();// 生成更新记录查看页的方法
 		String updateMethodStr = updateMethodStr();// 生成更新记录的方法
 		String lisMethodStr = listMethodStr();// 生成记录列表页的方法
 		String deleteMethodStr = deleteMethodStr();// 生成删除记录的方法
@@ -78,7 +72,7 @@ public class ControllerHelper implements CreateFileHelper{
 		String exportExcel = exportExcel();//生成导出数据表数据，导出格式为excel
 		
 		//方法拼接
-		classBody += addViewMethodStr+saveMethodStr+updateviewMethodStr+
+		classBody += addViewMethodStr+saveMethodStr+updateViewMethodStr+
 				updateMethodStr+lisMethodStr+deleteMethodStr+exportExcel+
 				importExcelView+importExcel+downloadTemplate;
 //		classBody += lisMethodStr;
@@ -335,10 +329,10 @@ public class ControllerHelper implements CreateFileHelper{
 				"	 * @return\r\n" + 
 				"	 * @throws Exception\r\n" + 
 				"	 */\r\n" + 
-				"	@GetMapping(\"/addView\")\r\n" + 
+				"	@GetMapping(\"/add\")\r\n" + 
 				"	public String addView(Model model) throws Exception {\r\n" + 
 				"		model.addAttribute(\""+entityLowerName+"\", new "+entityName+"());\r\n" + 
-				"		return \""+module+"/"+entityLowerName+"/updateview\";\r\n" + 
+				"		return \""+module+"/"+entityLowerName+"/add\";\r\n" + 
 				"	}";
 		return str;
 	}
@@ -360,16 +354,10 @@ public class ControllerHelper implements CreateFileHelper{
 				"	public String save(@ModelAttribute "+entityName+" "+entityLowerName+") {\r\n" + 
 				"		int suc = 0;\r\n" + 
 				"		String message = \"\";//所回前端的消息\r\n" + 
-				"		String message1 = \"\";//保存日志的消息\r\n" ;
-		if(modulePart.get("systemLog")!=null) {//日志模块
-			str+=	"		systemLog.setCreatetime(new Date());\r\n" ;
-		}
-		str+=	"		try {\r\n" + 
-				"			if("+entityLowerName+".get"+StringUtils.toUpperCaseFirstOne(primary_col.getEntityField())+"()==null) {\r\n" + 
-				"				suc = "+entityLowerName+"Service.save("+entityLowerName+");\r\n" + 
-				"			}else {\r\n" + 
-				"				suc = "+entityLowerName+"Service.update("+entityLowerName+");\r\n" + 
-				"			}\r\n" + 
+				"		String message1 = \"\";//保存日志的消息\r\n" + 
+				"		systemLog.setCreatetime(new Date());\r\n" + 
+				"		try {\r\n" + 
+				"			suc = "+entityLowerName+"Service.save("+entityLowerName+");\r\n" + 
 				"			if (suc == 1) {\r\n" + 
 				"				message = \"savesuccess\";\r\n" + 
 				"				message1 = \"新增成功\";\r\n" + 
@@ -381,20 +369,18 @@ public class ControllerHelper implements CreateFileHelper{
 				"			message = e.getMessage();\r\n" + 
 				"			message1 = e.getMessage();\r\n" + 
 				"			e.printStackTrace();\r\n" + 
-				"		}\r\n" ;
-		if(modulePart.get("systemLog")!=null) {//日志模块
-			str+=	"		systemLog.setAction(\"新增"+moduleName+"记录\");\r\n" + 
-					"		systemLog.setEndtime(new Date());\r\n" + 
-					"		systemLog.setRemark(message1);\r\n" + 
-					"		systemLogService.save(systemLog);// 保持日志\r\n";
-		}
-		str+=	"		return \"redirect:/"+entityName+"/list?message=\" + message;\r\n" + 
+				"		}\r\n" + 
+				"		systemLog.setAction(\"新增"+moduleName+"记录\");\r\n" + 
+				"		systemLog.setEndtime(new Date());\r\n" + 
+				"		systemLog.setRemark(message1);\r\n" + 
+				"		systemLogService.save(systemLog);// 保持日志\r\n" + 
+				"		return \"redirect:/"+entityName+"/list?message=\" + message;\r\n" + 
 				"	}";
 		return str;
 	}
 	
 	// 生成更新记录查看页的方法
-	public String updateviewMethodStr(){
+	public String updateViewMethodStr(){
 		//此方法要导入的包
 		importMap.put(n+"import org.springframework.web.bind.annotation.GetMapping;", "");
 		importMap.put(n+"import org.springframework.web.bind.annotation.PathVariable;", "");
@@ -436,12 +422,9 @@ public class ControllerHelper implements CreateFileHelper{
 				"	public String upate(@ModelAttribute "+entityName+" "+entityLowerName+", Model model) throws Exception {\r\n" + 
 				"		int suc = 0;\r\n" + 
 				"		String message = \"\";\r\n" + 
-				"		String message1 = \"\";\r\n" ;
-		if(modulePart.get("systemLog")!=null) {//日志模块
-			str+=	"		systemLog.setCreatetime(new Date());\r\n" ;
-		}
-		
-		str+=	"		try {\r\n" + 
+				"		String message1 = \"\";\r\n" + 
+				"		systemLog.setCreatetime(new Date());\r\n" + 
+				"		try {\r\n" + 
 				"			suc = "+entityLowerName+"Service.update("+entityLowerName+");\r\n" + 
 				"			if (suc == 1) {\r\n" + 
 				"				message = \"updatesuccess\";\r\n" + 
@@ -454,15 +437,12 @@ public class ControllerHelper implements CreateFileHelper{
 				"			message = e.getMessage();\r\n" + 
 				"			message1 = e.getMessage();\r\n" + 
 				"			e.printStackTrace();\r\n" + 
-				"		}\r\n" ;
-		if(modulePart.get("systemLog")!=null) {//日志模块
-			str+=	"		systemLog.setAction(\"更新"+moduleName+"记录\");\r\n" + 
-					"		systemLog.setEndtime(new Date());\r\n" + 
-					"		systemLog.setRemark(message1);\r\n" + 
-					"		systemLogService.save(systemLog);// 保持日志\r\n";
-		}
-		
-		str+=	"		return \"redirect:/"+entityName+"/list?message=\" + message;\r\n" + 
+				"		}\r\n" + 
+				"		systemLog.setAction(\"更新"+moduleName+"记录\");\r\n" + 
+				"		systemLog.setEndtime(new Date());\r\n" + 
+				"		systemLog.setRemark(message1);\r\n" + 
+				"		systemLogService.save(systemLog);// 保持日志\r\n" + 
+				"		return \"redirect:/"+entityName+"/list?message=\" + message;\r\n" + 
 				"	}";
 		return str;
 	}
@@ -474,7 +454,7 @@ public class ControllerHelper implements CreateFileHelper{
 		importMap.put(n+"import org.springframework.web.bind.annotation.ModelAttribute;", "");
 		importMap.put(n+"import org.springframework.ui.Model;", "");
 		importMap.put(n+"import "+packagePath+".entity."+entityName+";", "");
-		importMap.put(n+"import com.silas.util.params_trim.RequestParamsTrim;", "");
+		importMap.put(n+"import com.hzsh.util.params_trim.RequestParamsTrim;", "");
 		importMap.put(n+"import java.util.Map;", "");
 		importMap.put(n+"import java.util.List;", "");
 		String str = n+
@@ -497,9 +477,8 @@ public class ControllerHelper implements CreateFileHelper{
 				"			pageNum = Integer.parseInt(searchMap.get(\"pageNum\").toString());\r\n" + 
 				"		}\r\n" + 
 				"		searchMap.put(\"first\", (pageNum - 1) * size + 1);//记录起始下标\r\n" + 
-				"		searchMap.put(\"size\",  size);//记录结束下标\r\n" + 
-				"		searchMap.put(\"limit\",  true);//分页查询\r\n" + 
-				"		searchMap.put(\"orderStr\", \" "+primary_col.getColumName()+" DESC\");//默认id排序\r\n" + 
+				"		searchMap.put(\"size\", pageNum * size);//记录结束下标\r\n" + 
+				"		searchMap.put(\"orderStr\", \" g."+primary_col.getColumName()+" DESC\");//默认id排序\r\n" + 
 				"		List<"+entityName+"> recordList = "+entityLowerName+"Service.getListByMap(searchMap);//查询list\r\n" + 
 				"		allnum = "+entityLowerName+"Service.getTotalNumByMap(searchMap);// 查询总记录数\r\n" + 
 				"		if (allnum > 0) {//如果有记录\r\n" + 
@@ -549,16 +528,13 @@ public class ControllerHelper implements CreateFileHelper{
 				"			message = e.getMessage();\r\n" + 
 				"			message1 = e.getMessage();\r\n" + 
 				"			e.printStackTrace();\r\n" + 
-				"		}\r\n" ;
-		if(modulePart.get("systemLog")!=null) {//日志模块
-			str+=	"		systemLog.setAction(\"删除"+moduleName+"记录\");\r\n" + 
-					"		systemLog.setCreatetime(new Date());\r\n" + 
-					"		systemLog.setEndtime(new Date());\r\n" + 
-					"		systemLog.setRemark(message1);\r\n" + 
-					"		systemLogService.save(systemLog);// 保持日志\r\n" ;
-		}
-		
-		str+=	"		return \"redirect:/"+entityName+"/list?message=\" + message;\r\n" + 
+				"		}\r\n" + 
+				"		systemLog.setAction(\"删除"+moduleName+"记录\");\r\n" + 
+				"		systemLog.setCreatetime(new Date());\r\n" + 
+				"		systemLog.setEndtime(new Date());\r\n" + 
+				"		systemLog.setRemark(message1);\r\n" + 
+				"		systemLogService.save(systemLog);// 保持日志\r\n" + 
+				"		return \"redirect:/"+entityName+"/list?message=\" + message;\r\n" + 
 				"	}";
 		return str;
 	}

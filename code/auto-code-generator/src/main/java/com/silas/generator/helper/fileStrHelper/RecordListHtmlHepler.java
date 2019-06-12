@@ -15,7 +15,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 	Map<String,String> operationMap = new HashMap<String,String>();
 	{
 		//add 新增
-		operationMap.put("add", "新增");
+		operationMap.put("addView", "新增");
 		//importExcelView 导入
 		operationMap.put("importExcelView", "导入");
 		//exportExcel 导出
@@ -166,7 +166,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 			String colName = column.getEntityField();
 			tds +="					<!-- "+column.getRemark()+" -->"+n;
 			if(column.getJavaType().equals("Date")) {
-				tds +="					<td th:title=\"${#dates.format("+recordName+"."+colName+", 'yyyy-MM-dd')}\" th:text=\"${#dates.format("+recordName+"."+colName+", 'yyyy-MM-dd')}\"></td>\r\n" ;
+				tds +="					<td th:title=\"${#dates.format("+recordName+"."+colName+", '"+dateFormatPartten+"')}\" th:text=\"${#dates.format("+recordName+"."+colName+", '"+dateFormatPartten+"')}\"></td>\r\n" ;
 			}else {
 				tds +="					<td th:title=\"${"+recordName+"."+colName+"}\" th:text=\"${"+recordName+"."+colName+"}\"></td>\r\n" ;
 			}

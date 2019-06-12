@@ -101,7 +101,7 @@ public class RecordViewHtmlHepler implements CreateFileHelper,HtmlHelper{
 			if(column.getColumnTypeHelper().getClassName().equals("Date")) {
 				thTd =
 						tab3+"                  <th width=\"150\">"+columnZHName+"</th>\r\n" + 
-						tab3+"                  <td><input id=\""+columnName+"\" name=\""+columnName+"\"  th:field=\"*{"+columnName+"}\" type=\"text\" class=\"form-control input-wdatepicker\" onfocus=\"WdatePicker()\" placeholder=\"请选择"+columnZHName+"\"/></td>\r\n";
+						tab3+"                  <td><input id=\""+columnName+"\" name=\""+columnName+"\"  th:field=\"*{"+columnName+"}\" type=\"text\" class=\"form-control input-wdatepicker\" onfocus=\"WdatePicker({dateFmt:'"+dateFormatPartten+"'})\" placeholder=\"请选择"+columnZHName+"\"/></td>\r\n";
 			}else {
 				thTd = 
 						tab3+"                  <th width=\"150\">"+columnZHName+"</th>\r\n" + 

@@ -118,7 +118,7 @@ public class MapperXMLHelper2Mysql implements CreateFileHelper{
 	static String getListByMap(List<Column> colList) {
 		String getListByMap = n + "\t<!-- 根据map查询总数 -->" + n+
 				"\t<select id=\"getListByMap\" resultMap=\"BaseResultMap\">\n" +
-				"\t\tselect * from human_basic_info \n" +
+				"\t\tselect * from "+tableName+" \n" +
 				"\t\t<trim prefix=\"where\" suffixOverrides=\"AND\">\n";
 		String whereStr = "";
 		for(Column col:colList) {
@@ -133,7 +133,7 @@ public class MapperXMLHelper2Mysql implements CreateFileHelper{
 				"\t\t\torder by ${orderStr}\n" +
 				"\t\t</if>\n" +
 				"\t\t<if test=\"limit != null\">\n" +
-				"\t\t\t limit #firstResult#,#maxResults#\n" +
+				"\t\t\t limit #{first},#{size}\n" +
 				"\t\t</if>\n" +
 				"\t</select>";
 		return getListByMap;
@@ -161,7 +161,7 @@ public class MapperXMLHelper2Mysql implements CreateFileHelper{
 	public String updateByPrimaryKeySelective(List<Column> colList) {
 		String updateByPrimaryKeySelective = n + "<!-- 根据主键更新记录，选择字段更新 -->" + n
 				+ "	<update id=\"updateByPrimaryKeySelective\" parameterType=\"" + packagePath + ".entity." + entityName
-				+ "\">\r\n" + tab2 + "update U_END_PRICE\r\n" + tab2 + "<set>\r\n";
+				+ "\">\r\n" + tab2 + "update "+tableName+"\r\n" + tab2 + "<set>\r\n";
 		String setSelective = "";
 		for (Column col : colList) {
 			setSelective +=tab3+"<if test=\""+col.getEntityField()+" != null\">\r\n" + 

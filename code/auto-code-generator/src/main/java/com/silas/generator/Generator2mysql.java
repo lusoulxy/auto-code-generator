@@ -1,16 +1,25 @@
 package com.silas.generator;
 
-import com.silas.generator.helper.Column;
-import com.silas.generator.helper.fileStrHelper.*;
-import com.silas.jdbc.DBConifguration;
-import com.silas.jdbc.DBHelper;
-import com.silas.util.ResultBody;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.silas.generator.helper.Column;
+import com.silas.generator.helper.fileStrHelper.ControllerHelper;
+import com.silas.generator.helper.fileStrHelper.EntityHepler;
+import com.silas.generator.helper.fileStrHelper.MapperJavaHelper;
+import com.silas.generator.helper.fileStrHelper.MapperXMLHelper2Mysql;
+import com.silas.generator.helper.fileStrHelper.RecordAddHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.RecordImportViewHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.RecordListHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.RecordViewHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.ServiceHelper;
+import com.silas.generator.helper.fileStrHelper.ServiceImplHelper;
+import com.silas.jdbc.DBConifguration;
+import com.silas.jdbc.DBHelper;
+import com.silas.util.ResultBody;
 
 public class Generator2mysql{
 
@@ -72,19 +81,27 @@ public class Generator2mysql{
 				String typeName = resultSet.getString("TYPE_NAME");// 字段类型
 				column.setColumType(typeName);
 				String remark = resultSet.getString("REMARKS");
+				String columSize = resultSet.getString("COLUMN_SIZE");
+				column.setColumSize(columSize);
 				if(remark==null||remark.equals(""))
 					remark=columnName;
 				remark = remark.replaceAll("\n", " ");//去掉所有换行
 				column.setRemark(remark);//字段注释
 				System.out.println(column);
 				//根据TYPE_NAME，设置JavaType，设置jdbcType
-				column.setColumnHelper(Config.JDBC_JAVA_MAP.get(typeName));
+				if(typeName.equals("BIT")) {
+					column.setColumnHelper(Config.JDBC_JAVA_MAP.get(typeName+"-"+columSize));
+				}else {
+					column.setColumnHelper(Config.JDBC_JAVA_MAP.get(typeName));
+				}
 				//判断是否为主键
 				if(Config.primary_col.getColumName()!=null&&Config.primary_col.getColumName().equals(column.getColumName())) {
 					column.setPk(true);
 					//暂时默认ORACLE的数据库主键为VARCHAR2则主键自增 ，待完善 TODO
 					if(typeName.equals("VARCHAR2")&&DBConifguration.IS_ORACEL) {
 						column.setPkAuto(true);//主键自动生成
+					}if(Config.dbConifguration.getDriverClassName().equals("com.mysql.jdbc.Driver")) {
+						column.setPkAuto(true);//mysql默认主键自动生成
 					}
 					Config.primary_col =column;
 				}
