@@ -15,7 +15,7 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 	Map<String,String> operationMap = new HashMap<String,String>();
 	{
 		//add 新增
-		operationMap.put("addView", "新增");
+		operationMap.put("saveView", "新增");
 		//importExcelView 导入
 		operationMap.put("importExcelView", "导入");
 		//exportExcel 导出
@@ -111,6 +111,9 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		String ths="";
 		for(int i=0;i<listLimit;i++) {
 			String colZHName = colList.get(i).getRemark();//列中文名，待完善 TODO
+			if(colList.get(i).getRemarkOrigin().indexOf("-not_show")>0) {
+				continue;
+			}
 			ths += n+"					<th>"+colZHName+"</th>";
 		}
 		
@@ -118,6 +121,9 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		ths +=n+"					<!-- ";
 		for(int i=listLimit;i<colList.size();i++) {
 			String colZHName = colList.get(i).getRemark();//列中文名，待完善 TODO
+			if(colList.get(i).getRemarkOrigin().indexOf("-not_show")>0) {
+				continue;
+			}
 			ths += n+"					<th>"+colZHName+"</th>";
 		}
 		ths +=n+"					 -->";
@@ -163,6 +169,9 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 				"					<td th:text=\"${"+recordName+"start.count} + (${pageNum} -1)*${size} \"></td>\r\n";
 		for(int i=0;i<listLimit;i++) {
 			Column column = colList.get(i);
+			if(column.isNotShow()) {
+				continue;
+			}
 			String colName = column.getEntityField();
 			tds +="					<!-- "+column.getRemark()+" -->"+n;
 			if(column.getJavaType().equals("Date")) {
@@ -175,6 +184,9 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		//限制的列以注释形式生成
 		for(int i=listLimit;i<colList.size();i++) {
 			Column column = colList.get(i);
+			if(column.isNotShow()) {
+				continue;
+			}
 			String colName = column.getEntityField();
 			tds +="					<!-- "+column.getRemark()+n;
 			tds +="					<td th:title=\"${"+recordName+"."+colName+"}\" th:text=\"${"+recordName+"."+colName+"}\"></td>\r\n" ;

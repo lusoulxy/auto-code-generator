@@ -14,6 +14,7 @@ import com.silas.generator.helper.fileStrHelper.MapperXMLHelper2Mysql;
 import com.silas.generator.helper.fileStrHelper.RecordAddHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordImportViewHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordListHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.RecordSaveViewHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordViewHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.ServiceHelper;
 import com.silas.generator.helper.fileStrHelper.ServiceImplHelper;
@@ -137,6 +138,8 @@ public class Generator2mysql{
 		new RecordAddHtmlHepler().createFile();
 		// 10.生成template/entityName/importView.html
 		new RecordImportViewHtmlHepler().createFile();
+		// 11.生成template/entityName/save_view.html
+		new RecordSaveViewHtmlHepler().createFile();
 	}
 	
 }

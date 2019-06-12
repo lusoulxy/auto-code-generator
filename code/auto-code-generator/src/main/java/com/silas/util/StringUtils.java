@@ -102,5 +102,8 @@ public class StringUtils {
 		// 驼峰转下划线
 		// ARE_YOU_DOU_BI_YELLOWCONG
 		System.out.println(camel2Underline("TestAuto"));
+		
+		
+		System.out.println("编号ID$not_show$".replaceAll("$", ""));
 	}
 }

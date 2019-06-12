@@ -11,13 +11,13 @@ import java.util.Map;
 
 public class Config {
 	static {//设置模块参数
-		//		添加 人物信息 表 模块代码	
-		tableName = "human_other_info";//数据库表名
-		entityName = "HumanOtherInfo";//对应实体类名
+		//		添加 人物信息备注 表 模块代码	
+		tableName = "human_remark_info";//数据库表名
+		entityName = "HumanRemarkInfo";//对应实体类名
 		packagePath = "com.silas.human";//包名
 		module = "human";
 		parenModuleName = "人物信息";//大模块名
-		moduleName = "人物其他信息";//模块中文名，用于生成注释与日志相关
+		moduleName = "人物信息备注";//模块文名，用于生成注释与日志相关
 	}
 	public static String tableName;//数据库表名
 	public static String entityName;//对应实体类名

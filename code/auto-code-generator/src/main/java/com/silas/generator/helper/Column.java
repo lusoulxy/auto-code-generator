@@ -13,7 +13,13 @@ public class Column {
 
 	private ColumnTypeHelper columnTypeHelper;
 	
-
+	public boolean isNotShow() {
+		if(remark!=null) {
+			return remark.indexOf("-not_show")>0;
+		}else 
+			return false;
+	}
+	
 	public String getColumSize() {
 		return columSize;
 	}
@@ -42,9 +48,12 @@ public class Column {
 		this.columnTypeHelper = columnTypeHelper;
 	}
 
-
+	public String getRemarkOrigin() {
+		return remark;//
+	}
+	
 	public String getRemark() {
-		return remark;
+		return remark.replaceAll("-not_show", "");//去掉-not_show字眼
 	}
 
 	public void setRemark(String remark) {

@@ -15,6 +15,7 @@ import com.silas.generator.helper.interface_.CreateFileHelper;
 import com.silas.util.GeneratorUtil;
 import com.silas.util.StringUtils;
 
+
 public class ControllerHelper implements CreateFileHelper{
 	
 	Map<String,String> importMap = new HashMap<String,String>();
@@ -77,8 +78,10 @@ public class ControllerHelper implements CreateFileHelper{
 		String importExcel = importExcel();// 生成数据导入的方法，导出格式为excel
 		String exportExcel = exportExcel();//生成导出数据表数据，导出格式为excel
 		
+		String saveView= saveView();// 生成新增记录的方法
+		
 		//方法拼接
-		classBody += addViewMethodStr+saveMethodStr+updateviewMethodStr+
+		classBody += saveView+addViewMethodStr+saveMethodStr+updateviewMethodStr+
 				updateMethodStr+lisMethodStr+deleteMethodStr+exportExcel+
 				importExcelView+importExcel+downloadTemplate;
 //		classBody += lisMethodStr;
@@ -322,6 +325,29 @@ public class ControllerHelper implements CreateFileHelper{
 	}
 	
 	// 生成新增记录查看页的方法
+	public String saveView(){
+		//此方法要导入的包
+		importMap.put(n+"import org.springframework.web.bind.annotation.GetMapping;", "");
+		importMap.put(n+"import org.springframework.ui.Model;", "");
+		importMap.put(n+"import com.silas.util.params_trim.RequestParamsTrim;", "");
+		importMap.put(n+"import "+packagePath+".entity."+entityName+";", "");
+		String str = n+
+				"	/**\r\n" + 
+				"	 * 更新 "+moduleName+"记录 查看页\r\n" + 
+				"	 * \r\n" + 
+				"	 * @param model\r\n" + 
+				"	 * @return\r\n" + 
+				"	 * @throws Exception\r\n" + 
+				"	 */\r\n" + 
+				"	@GetMapping(\"/saveView\")\r\n" + 
+				"	public String saveView(@RequestParamsTrim "+entityName+" "+entityLowerName+" , Model model) throws Exception {\r\n" + 
+				"		model.addAttribute(\""+entityLowerName+"\","+entityLowerName+");\r\n" + 
+				"		return \""+module+"/"+entityLowerName+"/save_view\";\r\n" + 
+				"	}";
+		return str;
+	}
+	
+	// 生成新增记录查看页的方法
 	public String addViewMethodStr(){
 		//此方法要导入的包
 		importMap.put(n+"import org.springframework.web.bind.annotation.GetMapping;", "");
@@ -348,6 +374,7 @@ public class ControllerHelper implements CreateFileHelper{
 		//此方法要导入的包
 		importMap.put(n+"import org.springframework.web.bind.annotation.PostMapping;", "");
 		importMap.put(n+"import org.springframework.web.bind.annotation.ModelAttribute;", "");
+		importMap.put(n+"import com.silas.util.params_trim.RequestParamsTrim;", "");
 		importMap.put(n+"import "+packagePath+".entity."+entityName+";", "");
 		String str = n+
 				"	/**\r\n" + 
@@ -357,7 +384,7 @@ public class ControllerHelper implements CreateFileHelper{
 				"	 * @throws Exception\r\n" + 
 				"	 */\r\n" + 
 				"	@PostMapping(\"/save\")\r\n" + 
-				"	public String save(@ModelAttribute "+entityName+" "+entityLowerName+") {\r\n" + 
+				"	public String save(@RequestParamsTrim "+entityName+" "+entityLowerName+") {\r\n" + 
 				"		int suc = 0;\r\n" + 
 				"		String message = \"\";//所回前端的消息\r\n" + 
 				"		String message1 = \"\";//保存日志的消息\r\n" ;
@@ -496,7 +523,7 @@ public class ControllerHelper implements CreateFileHelper{
 				"		else {//否则使用传入的页数\r\n" + 
 				"			pageNum = Integer.parseInt(searchMap.get(\"pageNum\").toString());\r\n" + 
 				"		}\r\n" + 
-				"		searchMap.put(\"first\", (pageNum - 1) * size + 1);//记录起始下标\r\n" + 
+				"		searchMap.put(\"first\", (pageNum - 1) * size);//记录起始下标\r\n" + 
 				"		searchMap.put(\"size\",  size);//记录结束下标\r\n" + 
 				"		searchMap.put(\"limit\",  true);//分页查询\r\n" + 
 				"		searchMap.put(\"orderStr\", \" "+primary_col.getColumName()+" DESC\");//默认id排序\r\n" + 
