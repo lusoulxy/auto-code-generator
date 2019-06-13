@@ -64,14 +64,14 @@ public class EntityHepler implements CreateFileHelper {
 			String className =column.getColumnTypeHelper().getClassName();
 			String entityField = column.getEntityField();
 			String fieldUpperFirst = column.getEntityFieldUpperFisrt();
-			str += n+tab+"public "+className+" get"+fieldUpperFirst+"(){";
-			str += n+tab2+"return this."+entityField+";";
-			str += n+tab+"}";
+			str += n+t1+"public "+className+" get"+fieldUpperFirst+"(){";
+			str += n+t2+"return this."+entityField+";";
+			str += n+t1+"}";
 			
 			//setter方法
-			str += n+tab+"public void set"+fieldUpperFirst+"("+className+" "+entityField+"){";
-			str += n+tab2+"this."+entityField+" = "+entityField+";";
-			str += n+tab+"}";
+			str += n+t1+"public void set"+fieldUpperFirst+"("+className+" "+entityField+"){";
+			str += n+t2+"this."+entityField+" = "+entityField+";";
+			str += n+t1+"}";
 		}
 		return str;
 	}
@@ -86,9 +86,9 @@ public class EntityHepler implements CreateFileHelper {
 					str+=n+"	@DateTimeFormat(pattern = \"yyyy-MM-dd\")";
 					importStrs.put(n+"import org.springframework.format.annotation.DateTimeFormat;", "");
 				}
-				str += n+tab+"private "+className+" "+column.getEntityField()+";//"+column.getRemark();
+				str += n+t1+"private "+className+" "+column.getEntityField()+";//"+column.getRemark();
 			}else {
-				str += n+tab+"private "+className+" "+column.getEntityField()+";//"+column.getRemark();
+				str += n+t1+"private "+className+" "+column.getEntityField()+";//"+column.getRemark();
 			}
 		}
 		return str;

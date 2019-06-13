@@ -3,14 +3,13 @@ package com.silas.generator;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.fileStrHelper.ControllerHelper;
 import com.silas.generator.helper.fileStrHelper.EntityHepler;
-import com.silas.generator.helper.fileStrHelper.MapperJavaHelper;
+import com.silas.generator.helper.fileStrHelper.MapperJavaHelperV2;
 import com.silas.generator.helper.fileStrHelper.MapperXMLHelper;
 import com.silas.generator.helper.fileStrHelper.RecordAddHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordImportViewHtmlHepler;
@@ -111,7 +110,7 @@ public class Generator extends Config {
 		// 1.生成实体类entity/EntityName.java文件
 		new EntityHepler().createFile();
 		// 2.生成mapper/EntityNameMapper.java文件
-		new MapperJavaHelper().createFile();
+		new MapperJavaHelperV2().createFile();
 		// 3.生成mapping/EntityNameMapper.xml文件
 		new MapperXMLHelper().createFile();
 		// 4.生成service/EntityNameService.java文件

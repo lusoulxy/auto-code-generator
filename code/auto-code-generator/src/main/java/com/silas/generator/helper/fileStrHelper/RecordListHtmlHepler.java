@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.silas.generator.helper.Column;
+import com.silas.generator.helper.HtmlHelper;
 import com.silas.generator.helper.OutPutFile;
 import com.silas.generator.helper.interface_.CreateFileHelper;
 import com.silas.util.GeneratorUtil;
@@ -69,15 +70,15 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 		String searchBar = searchBar();
 		//toolbar-wrap navbar-form 工具栏（新增、导入、导出、模板下载等）
 		String toolBar = toolBar();
-		String table = n+tab2+"<table class=\"table table-hover table-striped \">";
+		String table = n+2+"<table class=\"table table-hover table-striped \">";
 		//table-thead
 		String tableHead = tableHead();
 		//table-tbody
 		String tableBody = tableBody();
-		table+=tableHead+tableBody+n+tab2+"</table>";
+		table+=tableHead+tableBody+n+2+"</table>";
 		//div-pagination
 		String pagination= pagination();
-		mainDiv+=n+searchBar+toolBar+table+pagination+tab+"</div>";
+		mainDiv+=n+searchBar+toolBar+table+pagination+t1+"</div>";
 		str+=topBar+mainDiv+"</body>";
 		return str;
 	}
@@ -269,41 +270,6 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 	private String behindScript() {
 		String str = n+
 				"<script th:inline=\"javascript\">\r\n" + 
-				"    var message = [[${message}]];\r\n" + 
-				"    \r\n" + 
-				"    if(message==\"delectsuccess\"){\r\n" + 
-				"    	message=\"删除成功！\"\r\n" + 
-				"    }\r\n" + 
-				"    if(message==\"updatesuccess\"){\r\n" + 
-				"    	message=\"修改成功！\"\r\n" + 
-				"    }\r\n" + 
-				"    if(message==\"savesuccess\"){\r\n" + 
-				"    	message=\"保存成功！\"\r\n" + 
-				"    }\r\n" + 
-				"    if(message==\"delectfailure\"){\r\n" + 
-				"    	message=\"删除失败！\"\r\n" + 
-				"    }\r\n" + 
-				"    if(message==\"updatefailure\"){\r\n" + 
-				"    	message=\"修改失败！\"\r\n" + 
-				"    }\r\n" + 
-				"    if(message==\"savefailure\"){\r\n" + 
-				"    	message=\"保存失败！\"\r\n" + 
-				"    }\r\n" + 
-				"    if(message != null && message != \"\"){							    	\r\n" + 
-				"   		alert(message);							   		 \r\n" + 
-				"   	}							   \r\n" + 
-				"</script>";
-		return str;
-	}
-	//body之前的script
-	private String aheadScript() {
-		String str = n+
-				"<script type=\"text/javascript\">\r\n" + 
-				"	var url =\"/"+entityName+"/list?\";\r\n" + 
-				"	var pageUrl =url+\"pageNum=\";\r\n" + 
-				"	var pageNum= [[${pageNum}]];   //当前页数\r\n" + 
-				"	var totalPage = [[${totalPages}]]; //总共页数\r\n" + 
-				"	\r\n" + 
 				"	//根据表单form获得查询url的条件\r\n" + 
 				"	function getFormParams(serId){\r\n" + 
 				"		return serializeNotNull($(\"#search_form\").serialize());\r\n" + 
@@ -367,6 +333,41 @@ public class RecordListHtmlHepler implements CreateFileHelper,HtmlHelper{
 				"			return false;\r\n" + 
 				"		}\r\n" + 
 				"	}\r\n" + 
+				"    var message = [[${message}]];\r\n" + 
+				"    \r\n" + 
+				"    if(message==\"delectsuccess\"){\r\n" + 
+				"    	message=\"删除成功！\"\r\n" + 
+				"    }\r\n" + 
+				"    if(message==\"updatesuccess\"){\r\n" + 
+				"    	message=\"修改成功！\"\r\n" + 
+				"    }\r\n" + 
+				"    if(message==\"savesuccess\"){\r\n" + 
+				"    	message=\"保存成功！\"\r\n" + 
+				"    }\r\n" + 
+				"    if(message==\"delectfailure\"){\r\n" + 
+				"    	message=\"删除失败！\"\r\n" + 
+				"    }\r\n" + 
+				"    if(message==\"updatefailure\"){\r\n" + 
+				"    	message=\"修改失败！\"\r\n" + 
+				"    }\r\n" + 
+				"    if(message==\"savefailure\"){\r\n" + 
+				"    	message=\"保存失败！\"\r\n" + 
+				"    }\r\n" + 
+				"    if(message != null && message != \"\"){							    	\r\n" + 
+				"   		alert(message);							   		 \r\n" + 
+				"   	}							   \r\n" + 
+				"</script>";
+		return str;
+	}
+	//body之前的script
+	private String aheadScript() {
+		String str = n+
+				"<script type=\"text/javascript\">\r\n" + 
+				"	var url =\"/"+entityName+"/list?\";\r\n" + 
+				"	var pageUrl =url+\"pageNum=\";\r\n" + 
+				"	var pageNum= [[${pageNum}]];   //当前页数\r\n" + 
+				"	var totalPage = [[${totalPages}]]; //总共页数\r\n" + 
+				
 				"</script>";
 		return str;
 	}

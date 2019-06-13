@@ -11,14 +11,20 @@ import com.silas.util.GeneratorUtil;
 
 public class Config {
 	{//设置模块参数
-		//		添加 销售月表统计表 模块代码	
-		tableName = "S_SALES_MONTH";//数据库表名
-		entityName = "SalesMonth";//对应实体类名
-		packagePath = "com.hzsh.salesMonth";//包名
-		module = "statistics";
-		parenModuleName = "统计";//大模块名
-		moduleName = "销售月统计";//模块中文名，用于生成注释与日志相关
+		//		添加 编码对照 表 模块代码	
+		tableName = "C_CODE_CONTRAST";//数据库表名
+		entityName = "CodeContrast";//对应实体类名
+		packagePath = "com.hzsh.configuration";//包名
+		module = "configuration";
+		parenModuleName = "编码管理";//大模块名
+		moduleName = "编码对照";//模块中文名，用于生成注释与日志相关
 	}
+	
+	public static Map<String,String> serviceMethod = new HashMap<String,String>();
+	{
+		
+	}
+	
 	public static String tableName;//数据库表名
 	public static String entityName;//对应实体类名
 	public static String packagePath;//包名
@@ -78,12 +84,12 @@ public class Config {
 			JDBC_JAVA_MAP.put("NVARCHAR2", columnHelper);
 			
 			columnHelper = new ColumnTypeHelper("java.math.BigDecimal");
-			columnHelper.setImportStr("\nimport java.math.BigDecimal;");
+			columnHelper.setImportStr("java.math.BigDecimal");
 			columnHelper.setJdbcType("DECIMAL");
 			
 			JDBC_JAVA_MAP.put("NUMBER", columnHelper);
 			columnHelper = new ColumnTypeHelper("java.util.Date");
-			columnHelper.setImportStr("\nimport java.util.Date;");
+			columnHelper.setImportStr("java.util.Date");
 			columnHelper.setJdbcType("TIMESTAMP");
 			JDBC_JAVA_MAP.put("DATE", columnHelper);
 		}

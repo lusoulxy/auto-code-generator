@@ -89,11 +89,11 @@ public class MapperXMLHelper implements CreateFileHelper{
 				"		<trim prefix=\"where\" suffixOverrides=\"AND\">\r\n";
 		String whereStr = "";
 		for(Column col:colList) {
-			whereStr += tab3+"<if test=\""+col.getEntityField()+"!=null\">\r\n" + 
-					tab4+col.getColumName()+" = #{"+col.getEntityField()+"} AND\r\n" + 
-					tab3+"</if>"+n;
+			whereStr += t3+"<if test=\""+col.getEntityField()+"!=null\">\r\n" + 
+					t4+col.getColumName()+" = #{"+col.getEntityField()+"} AND\r\n" + 
+					t3+"</if>"+n;
 		}
-		whereStr += tab2+"</trim>\r\n";
+		whereStr += t2+"</trim>\r\n";
 		getListByEntity += whereStr+
 				"	</select>";
 		return getListByEntity;
@@ -106,11 +106,11 @@ public class MapperXMLHelper implements CreateFileHelper{
 				"		<trim prefix=\"where\" suffixOverrides=\"AND\">\r\n";
 		String whereStr = "";
 		for(Column col:colList) {
-			whereStr += tab3+"<if test=\""+col.getEntityField()+"!=null\">\r\n" + 
-					tab4+col.getColumName()+" = #{"+col.getEntityField()+"} AND\r\n" + 
-					tab3+"</if>"+n;
+			whereStr += t3+"<if test=\""+col.getEntityField()+"!=null\">\r\n" + 
+					t4+col.getColumName()+" = #{"+col.getEntityField()+"} AND\r\n" + 
+					t3+"</if>"+n;
 		}
-		whereStr += tab2+"</trim>\r\n";
+		whereStr += t2+"</trim>\r\n";
 		getTotalNumByMap += whereStr+
 				"	</select>";
 		return getTotalNumByMap;
@@ -127,11 +127,11 @@ public class MapperXMLHelper implements CreateFileHelper{
 		
 		String whereStr = "";
 		for(Column col:colList) {
-			whereStr += tab3+"<if test=\""+col.getEntityField()+"!=null\">\r\n" + 
-					tab4+col.getColumName()+" = #{"+col.getEntityField()+"} AND\r\n" + 
-					tab3+"</if>"+n;
+			whereStr += t3+"<if test=\""+col.getEntityField()+"!=null\">\r\n" + 
+					t4+col.getColumName()+" = #{"+col.getEntityField()+"} AND\r\n" + 
+					t3+"</if>"+n;
 		}
-		whereStr += tab2+"</trim>\r\n";
+		whereStr += t2+"</trim>\r\n";
 		getListByMap +=whereStr+ 
 				"		<if test=\"orderStr != null\">\r\n" + 
 				"			order by ${orderStr}\r\n" + 
@@ -145,13 +145,13 @@ public class MapperXMLHelper implements CreateFileHelper{
 	// 根据主键更新记录，所有字段更新 updateByPrimaryKey
 	static String updateByPrimaryKey(List<Column> colList) {
 		String updateByPrimaryKey =  n + "<!-- 根据主键更新记录，所有字段更新 -->" + n
-				+ tab+"<update id=\"updateByPrimaryKey\""
+				+ t1+"<update id=\"updateByPrimaryKey\""
 				+ "		parameterType=\""+packagePath+".entity."+entityName+"\">\r\n" 
-				+ tab2+"update "+tableName+"\r\n"
-				+ tab2+"set ";
+				+ t2+"update "+tableName+"\r\n"
+				+ t2+"set ";
 		String setStr = "";
 		for(Column col:colList) {
-			setStr +=col.getColumName()+" = #{"+col.getEntityField()+",jdbcType="+col.getJdbcType()+"},\r\n"+tab2;
+			setStr +=col.getColumName()+" = #{"+col.getEntityField()+",jdbcType="+col.getJdbcType()+"},\r\n"+t2;
 		}
 		//去掉最后一个逗号
 		setStr = setStr.substring(0,setStr.lastIndexOf(","));
@@ -164,16 +164,16 @@ public class MapperXMLHelper implements CreateFileHelper{
 	public String updateByPrimaryKeySelective(List<Column> colList) {
 		String updateByPrimaryKeySelective = n + "<!-- 根据主键更新记录，选择字段更新 -->" + n
 				+ "	<update id=\"updateByPrimaryKeySelective\" parameterType=\"" + packagePath + ".entity." + entityName
-				+ "\">\r\n" + tab2 + "update U_END_PRICE\r\n" + tab2 + "<set>\r\n";
+				+ "\">\r\n" + t2 + "update U_END_PRICE\r\n" + t2 + "<set>\r\n";
 		String setSelective = "";
 		for (Column col : colList) {
-			setSelective +=tab3+"<if test=\""+col.getEntityField()+" != null\">\r\n" + 
-					tab4+col.getColumName()+"=#{"+col.getEntityField()+",jdbcType="+col.getJdbcType()+"},\r\n" + 
-					tab3+"</if>"+n;
+			setSelective +=t3+"<if test=\""+col.getEntityField()+" != null\">\r\n" + 
+					t4+col.getColumName()+"=#{"+col.getEntityField()+",jdbcType="+col.getJdbcType()+"},\r\n" + 
+					t3+"</if>"+n;
 		}
 		updateByPrimaryKeySelective+=setSelective
 				+"		</set>\r\n"
-				+ tab2+"where "+primary_col.getColumName()
+				+ t2+"where "+primary_col.getColumName()
 				+" = #{"+primary_col.getEntityField()
 				+",jdbcType="+primary_col.getJdbcType()+"}\r\n" 
 				+ "	</update>";
@@ -196,22 +196,22 @@ public class MapperXMLHelper implements CreateFileHelper{
 				+ "	<insert id=\"insertSelective\" parameterType=\""+packagePath+".entity."+entityName+"\">\r\n"
 				+ "		insert into " + tableName + "\r\n";
 		// 赋值字段拼接
-		String columnStr = tab2 + "<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">\r\n";
-		String valuesStr = tab2 + "<trim prefix=\"values (\" suffix=\")\" suffixOverrides=\",\">\r\n";
+		String columnStr = t2 + "<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">\r\n";
+		String valuesStr = t2 + "<trim prefix=\"values (\" suffix=\")\" suffixOverrides=\",\">\r\n";
 		for (Column col : colList) {
 			if (col.isPkAuto()) {// 若为主键
-				columnStr += tab3 + col.getColumName() + "," + n;
-				valuesStr += tab3 + "sys_guid()," + n;// 使用GUID,此为ORACLE数据库
+				columnStr += t3 + col.getColumName() + "," + n;
+				valuesStr += t3 + "sys_guid()," + n;// 使用GUID,此为ORACLE数据库
 
 			} else {
-				columnStr += tab3 + "<if test=\"" + col.getEntityField() + " != null\">\r\n" + tab4 + ""
-						+ col.getColumName() + ",\r\n" + tab3 + "</if>" + n;
-				valuesStr += tab3 + "<if test=\"" + col.getEntityField() + " != null\">\r\n" + tab4 + "#{"
-						+ col.getEntityField() + ",jdbcType=" + col.getJdbcType() + "},\r\n" + tab3 + "</if>" + n;
+				columnStr += t3 + "<if test=\"" + col.getEntityField() + " != null\">\r\n" + t4 + ""
+						+ col.getColumName() + ",\r\n" + t3 + "</if>" + n;
+				valuesStr += t3 + "<if test=\"" + col.getEntityField() + " != null\">\r\n" + t4 + "#{"
+						+ col.getEntityField() + ",jdbcType=" + col.getJdbcType() + "},\r\n" + t3 + "</if>" + n;
 			}
 		}
-		columnStr += tab2 + "</trim>" + n;
-		valuesStr += tab2 + "</trim>" + n;
+		columnStr += t2 + "</trim>" + n;
+		valuesStr += t2 + "</trim>" + n;
 		insertSelective += columnStr + valuesStr + "	</insert>";
 		return insertSelective;
 	}
@@ -221,8 +221,8 @@ public class MapperXMLHelper implements CreateFileHelper{
 		String insert = n + "<!-- 插入记录,含所有字段 -->" + n + "	<insert id=\"insert\"	parameterType=\"" + packagePath
 				+ ".entity." + entityName + "\">	" + n + "		insert into "+tableName+" " + n;
 		// 赋值字段拼接
-		String baseColumnList = tab2 + "(";
-		String valuesStr = tab2 + "(";
+		String baseColumnList = t2 + "(";
+		String valuesStr = t2 + "(";
 		for (Column col : colList) {
 			baseColumnList += col.getColumName() + ", ";
 			if (col.isPkAuto()) {
@@ -240,9 +240,9 @@ public class MapperXMLHelper implements CreateFileHelper{
 		valuesStr += ")" + n;
 
 		// 拼接
-		insert += baseColumnList + tab2 + "values \n" + valuesStr;
+		insert += baseColumnList + t2 + "values \n" + valuesStr;
 		// 结束
-		insert += tab + "</insert>";
+		insert += t1 + "</insert>";
 		return insert;
 	}
 
@@ -275,7 +275,7 @@ public class MapperXMLHelper implements CreateFileHelper{
 
 	// 所有字段拼接 Base_Column_List
 	static String baseColumnList(List<Column> colList) {
-		String baseColumnList = n + "<!-- 所有字段拼接 -->" + n + "	<sql id=\"Base_Column_List\">\r\n" + tab;
+		String baseColumnList = n + "<!-- 所有字段拼接 -->" + n + "	<sql id=\"Base_Column_List\">\r\n" + t1;
 		// 遍历字段
 		for (Column col : colList) {
 			baseColumnList += col.getColumName() + ", ";

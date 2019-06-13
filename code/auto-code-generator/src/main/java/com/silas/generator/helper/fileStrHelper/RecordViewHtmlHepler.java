@@ -1,6 +1,7 @@
 package com.silas.generator.helper.fileStrHelper;
 
 import com.silas.generator.helper.Column;
+import com.silas.generator.helper.HtmlHelper;
 import com.silas.generator.helper.OutPutFile;
 import com.silas.generator.helper.interface_.CreateFileHelper;
 import com.silas.util.GeneratorUtil;
@@ -100,12 +101,12 @@ public class RecordViewHtmlHepler implements CreateFileHelper,HtmlHelper{
 			String thTd = "";
 			if(column.getColumnTypeHelper().getClassName().equals("Date")) {
 				thTd =
-						tab3+"                  <th width=\"150\">"+columnZHName+"</th>\r\n" + 
-						tab3+"                  <td><input id=\""+columnName+"\" name=\""+columnName+"\"  th:field=\"*{"+columnName+"}\" type=\"text\" class=\"form-control input-wdatepicker\" onfocus=\"WdatePicker()\" placeholder=\"请选择"+columnZHName+"\"/></td>\r\n";
+						t3+"                  <th width=\"150\">"+columnZHName+"</th>\r\n" + 
+						t3+"                  <td><input id=\""+columnName+"\" name=\""+columnName+"\"  th:field=\"*{"+columnName+"}\" type=\"text\" class=\"form-control input-wdatepicker\" onfocus=\"WdatePicker()\" placeholder=\"请选择"+columnZHName+"\"/></td>\r\n";
 			}else {
 				thTd = 
-						tab3+"                  <th width=\"150\">"+columnZHName+"</th>\r\n" + 
-						tab3+"                  <td><input  id=\""+columnName+"\" name=\""+columnName+"\" type=\"text\" class=\"form-control\" th:field=\"*{"+columnName+"}\" placeholder=\"请输入"+columnZHName+"\"/></td>\r\n"; 
+						t3+"                  <th width=\"150\">"+columnZHName+"</th>\r\n" + 
+						t3+"                  <td><input  id=\""+columnName+"\" name=\""+columnName+"\" type=\"text\" class=\"form-control\" th:field=\"*{"+columnName+"}\" placeholder=\"请输入"+columnZHName+"\"/></td>\r\n"; 
 				
 			}
 			if(i%2==0) {

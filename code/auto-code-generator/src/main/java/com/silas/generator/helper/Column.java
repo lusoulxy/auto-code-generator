@@ -12,6 +12,9 @@ public class Column {
 
 	private ColumnTypeHelper columnTypeHelper;
 	
+	public String getImportStr() {
+		return columnTypeHelper.getImportStr();
+	}
 
 	public boolean isPkAuto() {
 		return isPkAuto;

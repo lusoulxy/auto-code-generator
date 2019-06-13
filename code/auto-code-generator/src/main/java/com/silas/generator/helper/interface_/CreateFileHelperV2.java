@@ -8,7 +8,7 @@ import com.silas.generator.Config;
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.OutPutFile;
 
-public interface CreateFileHelper {
+public interface CreateFileHelperV2 {
 	String recordName = "record";
 	String tableName = Config.tableName;//数据库表名
 	String entityName = Config.entityName;//对应实体类名
@@ -38,5 +38,12 @@ public interface CreateFileHelper {
 	public void createFile();//生成文件
 	
 	public OutPutFile getOutPutFile();//封装文件
+	
+	public String getOutPutContent();//获得要输出的文件内容
+	
+	public List<Module> getModules();//模块内容
+	
+	public String getModulesStr(List<Module> modules);//模块内容
+	
 	
 }
