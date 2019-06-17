@@ -3,13 +3,11 @@ package com.silas.util;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
 
-import com.silas.generator.Config;
+import com.silas.generator.config.Config;
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.ColumnTypeHelper;
 import com.silas.generator.helper.OutPutFile;
-import com.silas.generator.helper.fileStrHelper.EntityHepler;
 
 public class GeneratorUtil {
 

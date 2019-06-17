@@ -1,0 +1,31 @@
+计划
+1.设计controller,实现restful 接口
+
+完成工作
+1.更改记录ID为JAVA生成UUID
+
+2.完成RestControllerHelper，用于自动生成模块Restful接口
+
+3.重构Config类
+
+4.用user_accout表做测试
+测试用例：
+新增 save
+http://127.0.0.1:7600/userAccout/save？name=飞燕
+{"statusCode":"save_success","message":"新增成功","resultMap":{"record_id":"33b00bc704f94da78a58599e9825903e","params":{"id":"33b00bc704f94da78a58599e9825903e","name":"飞燕"},"operator":"/rest/userAccout/save"}}
+
+列表 list
+http://127.0.0.1:7600/userAccout/list
+{"statusCode":"opt_success","message":"操作成功","resultMap":{"size":20,"recordList":[{"id":"e69605caf3ce4c63831ab9c92d4d07bd","name":"飞燕"},{"id":"b564a98b615441f3b92df1cf40450001","name":"飞燕"}],"totalPages":1,"searchMap":{"orderStr":" id DESC","size":20,"limit":true,"pageNum":1,"first":0},"pageNum":1,"allnum":2}}
+
+更新 save
+http://127.0.0.1:7600/userAccout/save?id=e69605caf3ce4c63831ab9c92d4d07bd&name=%E5%B0%8F%E9%BB%84
+{"statusCode":"save_success","message":"更新成功","resultMap":{"record_id":"e69605caf3ce4c63831ab9c92d4d07bd","params":{"id":"e69605caf3ce4c63831ab9c92d4d07bd","name":"小黄"},"operator":"/rest/userAccout/save"}}
+
+详情 view
+http://127.0.0.1:7600/userAccout/view/e69605caf3ce4c63831ab9c92d4d07bd
+{"statusCode":null,"message":"opt_success","resultMap":{"record":{"id":"e69605caf3ce4c63831ab9c92d4d07bd","name":"小黄"},"params":"e69605caf3ce4c63831ab9c92d4d07bd","operator":"/rest/userAccout/view/e69605caf3ce4c63831ab9c92d4d07bd"}}
+
+删除 delect
+http://127.0.0.1:7600/userAccout/delect/33b00bc704f94da78a58599e9825903e
+{"statusCode":"delete_success","message":"删除记录:33b00bc704f94da78a58599e9825903e成功","resultMap":{"record_id":"33b00bc704f94da78a58599e9825903e","record":{"id":"33b00bc704f94da78a58599e9825903e","name":"飞燕"},"operator":"/rest/userAccout/delect/33b00bc704f94da78a58599e9825903e"}}

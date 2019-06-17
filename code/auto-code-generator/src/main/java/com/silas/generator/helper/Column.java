@@ -6,26 +6,23 @@ public class Column {
 	private String tableName;// 所在的表名
 	private String columName;// 字段名
 	private String columType;// 字段类型
-	private String columSize;// 长度
+	private String columnSize;// 所在的表名
 	private boolean isPk = false;// 是否为主键
 	private boolean isPkAuto = false;///是否自动生成主键
 	private String remark;//注释
 
 	private ColumnTypeHelper columnTypeHelper;
 	
-	public boolean isNotShow() {
-		if(remark!=null) {
-			return remark.indexOf("-not_show")>0;
-		}else 
-			return false;
-	}
-	
-	public String getColumSize() {
-		return columSize;
+	public String getColumnSize() {
+		return columnSize;
 	}
 
-	public void setColumSize(String columSize) {
-		this.columSize = columSize;
+	public void setColumnSize(String columnSize) {
+		this.columnSize = columnSize;
+	}
+
+	public String getImportStr() {
+		return columnTypeHelper.getImportStr();
 	}
 
 	public boolean isPkAuto() {
@@ -48,12 +45,9 @@ public class Column {
 		this.columnTypeHelper = columnTypeHelper;
 	}
 
-	public String getRemarkOrigin() {
-		return remark;//
-	}
-	
+
 	public String getRemark() {
-		return remark.replaceAll("-not_show", "");//去掉-not_show字眼
+		return remark;
 	}
 
 	public void setRemark(String remark) {
@@ -108,8 +102,16 @@ public class Column {
 		this.columType = columType;
 	}
 
+	@Override
+	public String toString() {
+		return "Column [columName=" + columName + ", columType=" + columType + "]";
+	}
+
 	public String getJdbcType() {
 		// TODO Auto-generated method stub
+		if(getColumnTypeHelper()==null) {
+			return "String";
+		}
 		return getColumnTypeHelper().getJdbcType();
 	}
 
@@ -121,13 +123,4 @@ public class Column {
 	public String getEntityFieldUpperFisrt() {
 		return StringUtils.toUpperCaseFirstOne(StringUtils.getLowerCamelCase(columName.toLowerCase()));
 	}
-
-	@Override
-	public String toString() {
-		return "Column [tableName=" + tableName + ", columName=" + columName + ", columType=" + columType
-				+ ", columSize=" + columSize + ", isPk=" + isPk + ", isPkAuto=" + isPkAuto + ", remark=" + remark
-				+ ", columnTypeHelper=" + columnTypeHelper + "]";
-	}
-	
-	
 }

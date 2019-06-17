@@ -10,8 +10,8 @@ import java.util.Properties;
 public class DBHelper {
 	
 	// 获得数据库连接
-	public static Connection getConnector(DBConifguration dbConifguration) {
-		return getConnector(dbConifguration.getDriverClassName(), dbConifguration.getUrl(), dbConifguration.getUsername(), dbConifguration.getPassword());
+	public static Connection getConnector() {
+		return getConnector(DBConfig.DRIVERCLASSNAME, DBConfig.URL,DBConfig.USERNAME, DBConfig.PASSWORK);
 	}
 
 	// 获得数据库连接

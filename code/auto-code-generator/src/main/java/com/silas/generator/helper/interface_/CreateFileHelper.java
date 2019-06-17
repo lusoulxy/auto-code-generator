@@ -1,42 +1,34 @@
 package com.silas.generator.helper.interface_;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.silas.generator.Config;
-import com.silas.generator.helper.Column;
-import com.silas.generator.helper.OutPutFile;
-
-public interface CreateFileHelper {
-	String recordName = "record";
-	String tableName = Config.tableName;//数据库表名
-	String entityName = Config.entityName;//对应实体类名
-	String entityLowerName = Config.entityLowerName;//实体类名的小驼峰命名
-	String path = Config.path;//代码文件输出路径
-	String packagePath = Config.packagePath;//包名
-	String module = Config.module;//模块名
-	String parenModuleName = Config.parenModuleName;//大模块中文名
-	String moduleName = Config.moduleName;//模块中文名，用于生成注释与日志相关
+public abstract class CreateFileHelper implements CreateHelper{
+	protected List<Module> modules = new ArrayList<Module>();;//所有模块
+	protected Map<String,Integer> toCreateModule = new HashMap<String,Integer>();//要生成的模块
 	
-	List<Column> colList = Config.colList;//根据表名获取的列元数据 
-	Column primary_col = Config.primary_col;//根据表名获取的主键
-	
-	String dateFormatPartten="yyyy-MM-dd HH:mm:ss";
-	String tab = "\t";
-	String tab2 = "\t\t";
-	String tab3 = "\t\t\t";
-	String tab4 = "\t\t\t\t";
-	String tab5 = "\t\t\t\t\t";
-	String tab6 = "\t\t\t\t\t\t";
-	String tab7 = "\t\t\t\t\t\t\t";
-	String tab8 = "\t\t\t\t\t\t\t\t";
-	String tab9 = "\t\t\t\t\t\t\t\t\t";
-	String n = "\n";
-	String n2 = "\n\n";
-	
-	public void createFile() ;//生成文件到输出路径
-	
-	public OutPutFile getOutPutFile();//获得要输出的文件
+	/**
+	 * 模块内容
+	 * @return
+	 */
+	@Override
+	public List<Module> getModules(Object object,List<Module> modules) throws Exception{
+		Class clazz = object.getClass();
+		Method[] methods = clazz.getMethods();
+		for (Method method : methods) {
+			if (method.getName() == null || (toCreateModule.get(method.getName()) == null))
+				continue;
+			if (toCreateModule.get(method.getName()) != 0) {
+				Module module =  (Module) method.invoke(object, null);
+				module.setOrder(toCreateModule.get(method.getName()));
+				modules.add(module);
+			}
+		}
+		return modules;
+	};
 	
 }
