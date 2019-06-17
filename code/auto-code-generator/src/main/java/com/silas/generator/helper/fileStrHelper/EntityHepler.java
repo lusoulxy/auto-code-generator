@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.silas.generator.Config;
+import com.silas.generator.config.Config;
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.OutPutFile;
 import com.silas.generator.helper.interface_.CreateFileHelper;

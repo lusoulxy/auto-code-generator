@@ -1,14 +1,13 @@
 package com.silas.generator.helper.interface_;
 
-import java.util.HashMap;
+import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 
 import com.silas.generator.config.Config;
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.OutPutFile;
 
-public interface CreateFileHelper {
+public interface CreateHelper {
 	String recordName = "record";
 	String tableName = Config.tableName;//数据库表名
 	String entityName = Config.entityName;//对应实体类名
@@ -37,6 +36,29 @@ public interface CreateFileHelper {
 	
 	public void createFile();//生成文件
 	
-	public OutPutFile getOutPutFile();//封装文件
+	
+	/**
+	 * 封装文件
+	 * @return
+	 */
+	public OutPutFile getOutPutFile();
+	
+	/**
+	 * 获得要输出的文件内容
+	 * @return
+	 */
+	public String getOutPutContent();
+	
+	/**
+	 * 模块内容
+	 * @return
+	 */
+	public List<Module> getModules();
+	
+	/**
+	 * 模块内容
+	 * @return
+	 */
+	public List<Module> getModules(Object object,List<Module> modules);
 	
 }

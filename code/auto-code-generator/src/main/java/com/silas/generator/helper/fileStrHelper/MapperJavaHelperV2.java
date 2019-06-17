@@ -3,39 +3,36 @@ package com.silas.generator.helper.fileStrHelper;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import com.silas.generator.config.ImportC;
 import com.silas.generator.helper.OutPutFile;
 import com.silas.generator.helper.interface_.CreateClassHelper;
-import com.silas.generator.helper.interface_.ImportC;
 import com.silas.generator.helper.interface_.Module;
 import com.silas.generator.helper.interface_.ModuleImport;
 import com.silas.generator.helper.interface_.ModuleMethod;
 import com.silas.util.GeneratorUtil;
+import com.silas.util.module.ModuleUtils;
 
-public class MapperJavaHelperV2 implements CreateClassHelper{
-	ModuleImport someImport = new ModuleImport();//记录要导入的包
-	List<Module> modules = new ArrayList<Module>();;//要使用的模块
-	//设置方法是否生成
-	Map<String,Boolean> methodCreateMap = new HashMap<String,Boolean>();
+public class MapperJavaHelperV2 extends CreateClassHelper{
+	//设置模块是否生成，和生成的顺序；value=0为不生成，数字越小排越前面
 	{
 		//key:方法名，value：true 则生成 false 则不生成
-		methodCreateMap.put("deleteByPrimaryKey", true);// 根据主键删除记录
-		methodCreateMap.put("insert", true);//插入记录,含所有字段
-		methodCreateMap.put("insertSelective", true);//插入记录，选择字段插入
-		methodCreateMap.put("selectByPrimaryKey", true);///根据主键查询
-		methodCreateMap.put("updateByPrimaryKey", true);//根据主键更新记录，所有字段更新
-		methodCreateMap.put("updateByPrimaryKeySelective", true);//根据主键，选择字段进行更新
-		methodCreateMap.put("getListByMap", true);//根据map查询list，用于分页查询
-		methodCreateMap.put("getTotalNumByMap", true);//根据map查询总数
-		methodCreateMap.put("getListByEntity", true);//根据实体类查询list
+		toCreateModule.put("insert", 2);//插入记录,含所有字段
+		toCreateModule.put("insertSelective", 3);//插入记录，选择字段插入
+		toCreateModule.put("selectByPrimaryKey", 4);///根据主键查询
+		toCreateModule.put("updateByPrimaryKey", 5);//根据主键更新记录，所有字段更新
+		toCreateModule.put("updateByPrimaryKeySelective", 6);//根据主键，选择字段进行更新
+		toCreateModule.put("getListByMap", 7);//根据map查询list，用于分页查询
+		toCreateModule.put("getTotalNumByMap", 8);//根据map查询总数
+		toCreateModule.put("getListByEntity", 9);//根据实体类查询list
+		toCreateModule.put("deleteByPrimaryKey", 10);// 根据主键删除记录
 	}
 	
 	/**
 	 * 生成mapper/EntityNameMapper.java文件
 	 */
+	@Override
 	public void createFile() {
 		GeneratorUtil.createFile(getOutPutFile());
 	}
@@ -43,6 +40,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 	/**
 	 * 封装要生成的mapper/EntityNameMapper.java文件
 	 */
+	@Override
 	public OutPutFile getOutPutFile() {
 		String fileFullName = path + GeneratorUtil.getPackage(packagePath) + "mapper/" + entityName + "Mapper.java";
 		return GeneratorUtil.getOutPutFile(fileFullName, getOutPutContent());
@@ -59,15 +57,12 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 		String packageName =  "package " + packagePath + ".mapper;" + n2;
 		//2。导入所依赖的包
 		String importNeed = "";
-		
 		//3。开始
 		String start = "@Mapper" + n + "public interface " + entityName + "Mapper {" + n;
 		someImport.putImport(ImportC.MAPPER);
-		
 		//4。方法
 		modules = getModules();
-		String methods = getModulesStr(modules);
-		
+		String methods = ModuleUtils.getModulesStr(modules);
 		modules.add(someImport);
 		importNeed = getImortStr(modules)+n;//获得所有要导入的包
 		//5。结束
@@ -81,65 +76,14 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 	/**
 	 * 获得要生成的方法，进行封装
 	 */
-	@Override
 	public List<Module> getModules() {
 		// TODO Auto-generated method stub
-		MapperJavaMethods mapperJavaMethods = new MapperJavaMethods();
+		InnerModules mapperJavaMethods = new InnerModules();
 		Class clazz = mapperJavaMethods.getClass();
-		Method [] methods = clazz.getMethods();
-		for(Method method : methods) {
-			if(method.getName()==null||(methodCreateMap.get(method.getName())==null))
-				continue;
-			if(methodCreateMap.get(method.getName())) {
-				try {
-					ModuleMethod ModuleMethod= (ModuleMethod) method.invoke(mapperJavaMethods,null);
-					modules.add(ModuleMethod);
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		return modules;
-	}
-
-	/**
-	 * 获得文件模块内容，此处为所有方法定义
-	 */
-	@Override
-	public String getModulesStr(List<Module> modules) {
-		String s = "";
-		for(Module module:modules) {
-			if(module instanceof ModuleMethod) {
-				s += ((ModuleMethod)module).getMethodFullStr()+n;
-			}
-		}
-		return s;
-	}
-
-	/**
-	 * 获得所有要导入的包字符串拼接
-	 */
-	@Override
-	public String getImortStr(List<Module> modules) {
-		String s = "";
-		Map<String,String> map = new HashMap<String,String>();
-		for(Module module:modules) {//合并所有Import,将重复的去掉
-			map.putAll(((ModuleImport)module).getMethodImport());
-		}
-		for(String imp : map.keySet()) {//遍历Import，拼接字符串
-			s +="import "+imp+";"+n;
-		}
-		return s;
+		return getModules(mapperJavaMethods,modules);
 	}
 	
-	class MapperJavaMethods{
+	public class InnerModules{
 		/*
 		 * 根据实体类查询list
 		 */
@@ -153,7 +97,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 					"	 * @return\r\n" + 
 					"	 */\r\n" + 
 					"	List<"+entityName+"> getListByEntity("+entityName+" entity);";
-			method.setMethodFullStr(fullStr);
+			method.setFullStr(fullStr);
 			//要导入的包
 			method.putImport(entityPackage);
 			method.putImport(ImportC.LIST);
@@ -172,7 +116,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 					"	 * @return\r\n" + 
 					"	 */\r\n" + 
 					"	int getTotalNumByMap(Map<String, Object> map);";
-			method.setMethodFullStr(fullStr);
+			method.setFullStr(fullStr);
 			//要导入的包
 			method.putImport(entityPackage);
 			method.putImport(ImportC.MAP);
@@ -191,7 +135,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 					"	 * @return\r\n" + 
 					"	 */\r\n" + 
 					"	List<"+entityName+"> getListByMap(Map<String,Object> map);";
-			method.setMethodFullStr(fullStr);
+			method.setFullStr(fullStr);
 			//要导入的包
 			method.putImport(entityPackage);
 			method.putImport(ImportC.LIST);
@@ -212,7 +156,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 					"     * @return\r\n" + 
 					"     */\r\n" + 
 					"    int updateByPrimaryKey("+entityName+" record);";
-			method.setMethodFullStr(fullStr);
+			method.setFullStr(fullStr);
 			//要导入的包
 			method.putImport(entityPackage);
 			return method;
@@ -231,7 +175,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 					"     * @return\r\n" + 
 					"     */\r\n" + 
 					"    int updateByPrimaryKeySelective("+entityName+" record);";
-			method.setMethodFullStr(fullStr);
+			method.setFullStr(fullStr);
 			//要导入的包
 			method.putImport(entityPackage);
 			return method;
@@ -250,7 +194,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 					"     * @return\r\n" + 
 					"     */\r\n" + 
 					"	"+entityName+" selectByPrimaryKey("+primary_col.getJavaType()+" "+primary_col.getEntityField()+");";
-			method.setMethodFullStr(fullStr);
+			method.setFullStr(fullStr);
 			//要导入的包
 			method.putImport(primary_col.getImportStr());
 			return method;
@@ -269,7 +213,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 					"     * @return\r\n" + 
 					"     */\r\n" + 
 					"    int insertSelective("+entityName+" record);";
-			method.setMethodFullStr(fullStr);
+			method.setFullStr(fullStr);
 			//要导入的包
 			method.putImport(entityPackage);
 			return method;
@@ -288,7 +232,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 					"	 * @return\r\n" + 
 					"	 */\r\n" + 
 					"    int insert("+entityName+" record);";
-			method.setMethodFullStr(fullStr);
+			method.setFullStr(fullStr);
 			//要导入的包
 			method.putImport(entityPackage);
 			return method;
@@ -307,7 +251,7 @@ public class MapperJavaHelperV2 implements CreateClassHelper{
 					"	 * @return\r\n" + 
 					"	 */\r\n" + 
 					"	int deleteByPrimaryKey("+primary_col.getJavaType()+" "+primary_col.getEntityField()+");";
-			method.setMethodFullStr(fullStr);
+			method.setFullStr(fullStr);
 			//导入的主键依赖的包
 			method.putImport(primary_col.getImportStr());
 			return method;

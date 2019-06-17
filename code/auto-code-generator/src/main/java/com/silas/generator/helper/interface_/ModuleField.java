@@ -5,6 +5,6 @@ package com.silas.generator.helper.interface_;
  * @author WuGuoDa
  * @version 时间：2019年6月13日 下午1:46:23
  */
-public class ModuleField extends ModuleJava{
+public class ModuleField extends ModuleImport{
 	
 }

@@ -1,4 +1,4 @@
-package com.silas.generator;
+package com.silas.generator.config;
 
 import java.util.HashMap;
 import java.util.List;

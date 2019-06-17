@@ -6,17 +6,18 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.silas.generator.config.Config;
 import com.silas.generator.helper.Column;
 import com.silas.generator.helper.fileStrHelper.ControllerHelper;
 import com.silas.generator.helper.fileStrHelper.EntityHepler;
 import com.silas.generator.helper.fileStrHelper.MapperJavaHelperV2;
-import com.silas.generator.helper.fileStrHelper.MapperXMLHelper;
+import com.silas.generator.helper.fileStrHelper.MapperXMLHelperV2;
 import com.silas.generator.helper.fileStrHelper.RecordAddHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordImportViewHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordListHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordViewHtmlHepler;
-import com.silas.generator.helper.fileStrHelper.ServiceHelper;
-import com.silas.generator.helper.fileStrHelper.ServiceImplHelper;
+import com.silas.generator.helper.fileStrHelper.ServiceHelperV2;
+import com.silas.generator.helper.fileStrHelper.ServiceImplHelperV2;
 import com.silas.jdbc.DBConifguration;
 import com.silas.jdbc.DBHelper;
 import com.silas.util.ResultBody;
@@ -58,9 +59,15 @@ public class Generator extends Config {
 			dBMetaData = connection.getMetaData();
 			// 根据表名获得主键结果集
 			resultSet = dBMetaData.getPrimaryKeys(null, null, tableName);
+			boolean hasPrimaryKey = false;
 			// 根据主键结果集设置表主键
 			while (resultSet.next()) {
 				primary_col.setColumName(resultSet.getString("COLUMN_NAME"));
+				hasPrimaryKey = true;
+			}
+			//如果主键为空
+			if(!hasPrimaryKey) {
+				throw new Exception("---------- 表必须设置主键");
 			}
 			//释放资源
 			DBHelper.release(resultSet);
@@ -112,11 +119,11 @@ public class Generator extends Config {
 		// 2.生成mapper/EntityNameMapper.java文件
 		new MapperJavaHelperV2().createFile();
 		// 3.生成mapping/EntityNameMapper.xml文件
-		new MapperXMLHelper().createFile();
+		new MapperXMLHelperV2().createFile();
 		// 4.生成service/EntityNameService.java文件
-		new ServiceHelper().createFile();
+		new ServiceHelperV2().createFile();
 		// 5.生成service/EntityNameImpl.java文件
-		new ServiceImplHelper().createFile();
+		new ServiceImplHelperV2().createFile();
 		// 6.生成controller/EntityNameController文件
 		new ControllerHelper().createFile();
 		// 7.生成template/entityName/list.html

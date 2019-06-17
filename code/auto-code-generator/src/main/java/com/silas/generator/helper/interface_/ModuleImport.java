@@ -8,7 +8,16 @@ import java.util.Map;
  * @author WuGuoDa
  * @version 时间：2019年6月13日 下午4:12:21
  */
-public class ModuleImport implements Module{
+public class ModuleImport extends Module{
+	
+	public ModuleImport() {
+		super();
+	}
+	 
+	public ModuleImport(String name) {
+		super(name);
+	}
+
 	protected Map<String,String> methodImport = new HashMap<String,String>();//导入依赖的包
 
 	public Map<String, String> getMethodImport() {
@@ -32,5 +41,5 @@ public class ModuleImport implements Module{
 		}
 		return str;
 	}
-	
+
 }
