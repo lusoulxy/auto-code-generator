@@ -1,6 +1,10 @@
 package com.silas.generator.config;
 
 public class ImportC {
+	public static final String REQUESTPARAMSTRIM = "com.silas.util.request.params.RequestParamsTrim";
+	public static final String UUIDGen = "com.silas.util.uuid.UUIDGen";
+	public static final String RESULTBODY = "com.silas.util.result.ResultBody";
+	
 	public static final String INPUTSTREAM = "java.io.InputStream";
 	public static final String POI_XSSFWORKBOOK = "org.apache.poi.xssf.usermodel.XSSFWorkbook";
 	public static final String POI_SHEET = "org.apache.poi.ss.usermodel.Sheet";
@@ -18,4 +22,7 @@ public class ImportC {
 	public static final String SIMPLEDATAEFORMAT = "java.text.SimpleDateFormat";
 	public static final String POI_CELLTYPE = "org.apache.poi.ss.usermodel.CellType";
 	public static final String SERVICE = "org.springframework.stereotype.Service";
+	public static final String REQUESTMAPPING = "org.springframework.web.bind.annotation.RequestMapping";
+	public static final String PATHVARIABLE = "org.springframework.web.bind.annotation.PathVariable";
+	
 }

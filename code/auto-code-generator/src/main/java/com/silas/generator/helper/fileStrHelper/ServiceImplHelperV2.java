@@ -72,8 +72,8 @@ public class ServiceImplHelperV2 extends CreateClassHelper{
 
 	@Override
 	public List<Module> getModules() {
-		InnerModules mapperJavaMethods = new InnerModules();
-		return getModules(mapperJavaMethods,modules);
+		InnerModules innerModeules = new InnerModules();
+		return getModules(innerModeules,modules);
 	}
 	/**
 	 * 

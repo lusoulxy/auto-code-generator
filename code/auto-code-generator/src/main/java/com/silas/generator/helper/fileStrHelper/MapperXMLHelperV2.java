@@ -64,8 +64,8 @@ public class MapperXMLHelperV2 extends CreateFileHelperV2 {
 	 * 获得要生成模块，进行封装
 	 */
 	public List<Module> getModules() {
-		InnerModules mapperJavaMethods = new InnerModules();
-		return getModules(mapperJavaMethods,modules);
+		InnerModules innerModeules = new InnerModules();
+		return getModules(innerModeules,modules);
 	}
 	
 	public class InnerModules {

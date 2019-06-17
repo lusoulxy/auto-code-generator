@@ -78,9 +78,8 @@ public class MapperJavaHelperV2 extends CreateClassHelper{
 	 */
 	public List<Module> getModules() {
 		// TODO Auto-generated method stub
-		InnerModules mapperJavaMethods = new InnerModules();
-		Class clazz = mapperJavaMethods.getClass();
-		return getModules(mapperJavaMethods,modules);
+		InnerModules innerModeules = new InnerModules();
+		return getModules(innerModeules,modules);
 	}
 	
 	public class InnerModules{

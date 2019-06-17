@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.silas.generator.config.Config;
 import com.silas.generator.helper.Column;
-import com.silas.generator.helper.fileStrHelper.ControllerHelper;
 import com.silas.generator.helper.fileStrHelper.EntityHepler;
 import com.silas.generator.helper.fileStrHelper.MapperJavaHelperV2;
 import com.silas.generator.helper.fileStrHelper.MapperXMLHelperV2;
@@ -16,6 +15,7 @@ import com.silas.generator.helper.fileStrHelper.RecordAddHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordImportViewHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordListHtmlHepler;
 import com.silas.generator.helper.fileStrHelper.RecordViewHtmlHepler;
+import com.silas.generator.helper.fileStrHelper.RestControllerHelper;
 import com.silas.generator.helper.fileStrHelper.ServiceHelperV2;
 import com.silas.generator.helper.fileStrHelper.ServiceImplHelperV2;
 import com.silas.jdbc.DBConifguration;
@@ -125,7 +125,7 @@ public class Generator extends Config {
 		// 5.生成service/EntityNameImpl.java文件
 		new ServiceImplHelperV2().createFile();
 		// 6.生成controller/EntityNameController文件
-		new ControllerHelper().createFile();
+		new RestControllerHelper().createFile();
 		// 7.生成template/entityName/list.html
 		new RecordListHtmlHepler().createFile();
 		// 8.生成template/entityName/updateView.html

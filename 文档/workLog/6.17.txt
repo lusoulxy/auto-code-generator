@@ -1,0 +1,4 @@
+计划
+1.设计controller,实现restful 接口
+
+1.更改记录ID为JAVA生成UUID
