@@ -51,6 +51,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.16</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>com.microsoft.sqlserver</groupId>
+		    <artifactId>sqljdbc42</artifactId>
+		    <version>4.2</version>
+		</dependency>
 
 
 		<dependency>

@@ -96,7 +96,7 @@ public class Generator{
 					column.setColumnHelper(Config.JDBC_JAVA_MAP.get(typeName));
 				}
 				//判断是否为主键
-				if(Config.primary_col.getColumName()!=null&&Config.primary_col.getColumName().equals(column.getColumName())) {
+				if(Config.primary_col!=null&&Config.primary_col.getColumName()!=null&&Config.primary_col.getColumName().equals(column.getColumName())) {
 					column.setPk(true);
 					//暂时默认ORACLE的数据库主键为VARCHAR2则主键自增 ，待完善 TODO
 //					if(typeName.equals("VARCHAR2")&&DBConifguration.IS_ORACEL) {
@@ -119,11 +119,11 @@ public class Generator{
 	// 解析表的字段元数据，根据元数据生成对应代码文件
 	private void createCodeFiles() throws Exception {
 		// 1.生成实体类entity/EntityName.java文件
-		new EntityHepler().createFile();
+//		new EntityHepler().createFile();
 //		// 2.生成mapper/EntityNameMapper.java文件
-		new MapperJavaHelper().createFile();
+//		new MapperJavaHelper().createFile();
 		// 3.生成mapping/EntityNameMapper.xml文件
-		new MapperXMLHelper().createFile();
+//		new MapperXMLHelper().createFile();
 		// 4.生成service/EntityNameService.java文件
 		new ServiceHelper().createFile();
 		// 5.生成service/EntityNameImpl.java文件
